@@ -6,12 +6,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import mineverse.Aust1n46.chat.api.events.PrivateMessageEvent;
 import net.kyori.adventure.text.Component;
@@ -152,13 +147,19 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 		
 		startRepeatingTasks();
 
-		LoginListener loginListener = new LoginListener();
-		Bukkit.getOnlinePlayers().forEach(p -> {
-			try {
-				loginListener.onPlayerJoin(new PlayerJoinEvent(p, (Component) null));
-			} catch (Exception ignored) {
-			}
-		});
+		ArrayList<? extends Player> online = new ArrayList<>(Bukkit.getOnlinePlayers());
+		if (!online.isEmpty()) {
+			getServer().getScheduler().runTaskLaterAsynchronously(this, () -> {
+				Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Loading online players"));
+				LoginListener loginListener = new LoginListener();
+				online.forEach(p -> {
+					try {
+						loginListener.onPlayerJoin(new PlayerJoinEvent(p, (Component) null));
+					} catch (Exception ignored) {
+					}
+				});
+			}, 5);
+		}
 		
 		Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Enabled Successfully"));	
 	}
