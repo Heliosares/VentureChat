@@ -1000,7 +1000,15 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 						return;
 					}
 
-					PrivateMessageEvent privateMessageEvent = new PrivateMessageEvent(MineverseChatAPI.getMineverseChatPlayer(sender), p, msg, false);
+					MineverseChatPlayer senderMCP = MineverseChatAPI.getMineverseChatPlayer(sender);
+
+					if(senderMCP == null) {
+						senderMCP = new MineverseChatPlayer(sender, sName);
+						MineverseChatAPI.addMineverseChatPlayerToMap(senderMCP);
+						MineverseChatAPI.addNameToMap(senderMCP);
+					}
+
+					PrivateMessageEvent privateMessageEvent = new PrivateMessageEvent(senderMCP, p, msg, false);
 					getServer().getPluginManager().callEvent(privateMessageEvent);
 					if (privateMessageEvent.isCancelled()) {
 						out.writeUTF("Message");
@@ -1018,11 +1026,6 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 					p.getPlayer().sendMessage(Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(p.getPlayer(), send.replaceAll("receiver_", ""))) + msg);
 					if(p.hasNotifications()) {
 						Format.playMessageSound(p);
-					}
-					if(MineverseChatAPI.getMineverseChatPlayer(sender) == null) {
-						MineverseChatPlayer senderMCP = new MineverseChatPlayer(sender, sName);
-						MineverseChatAPI.addMineverseChatPlayerToMap(senderMCP);
-						MineverseChatAPI.addNameToMap(senderMCP);
 					}
 					p.setReplyPlayer(sender);
 					out.writeUTF("Message");
