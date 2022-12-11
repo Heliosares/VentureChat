@@ -149,6 +149,12 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 		new VentureChatPlaceholders().register();
 		
 		startRepeatingTasks();
+
+		Bukkit.getOnlinePlayers().forEach(p -> {
+			MineverseChatPlayer mcp = new MineverseChatPlayer(p.getUniqueId(), p.getName());
+			MineverseChatAPI.addMineverseChatPlayerToMap(mcp);
+			MineverseChatAPI.addNameToMap(mcp);
+		});
 		
 		Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Enabled Successfully"));	
 	}
