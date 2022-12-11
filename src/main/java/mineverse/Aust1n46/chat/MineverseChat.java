@@ -14,9 +14,11 @@ import java.util.Set;
 import java.util.UUID;
 
 import mineverse.Aust1n46.chat.api.events.PrivateMessageEvent;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -150,10 +152,12 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 		
 		startRepeatingTasks();
 
+		LoginListener loginListener = new LoginListener();
 		Bukkit.getOnlinePlayers().forEach(p -> {
-			MineverseChatPlayer mcp = new MineverseChatPlayer(p.getUniqueId(), p.getName());
-			MineverseChatAPI.addMineverseChatPlayerToMap(mcp);
-			MineverseChatAPI.addNameToMap(mcp);
+			try {
+				loginListener.onPlayerJoin(new PlayerJoinEvent(p, (Component) null));
+			} catch (Exception ignored) {
+			}
 		});
 		
 		Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Enabled Successfully"));	
