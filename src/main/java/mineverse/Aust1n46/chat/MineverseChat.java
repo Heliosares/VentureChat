@@ -149,7 +149,7 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 
 		ArrayList<? extends Player> online = new ArrayList<>(Bukkit.getOnlinePlayers());
 		if (!online.isEmpty()) {
-			getServer().getScheduler().runTaskLaterAsynchronously(this, () -> {
+			//getServer().getScheduler().runTaskLaterAsynchronously(this, () -> {
 				Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Loading online players"));
 				LoginListener loginListener = new LoginListener();
 				online.forEach(p -> {
@@ -158,7 +158,7 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 					} catch (Exception ignored) {
 					}
 				});
-			}, 5);
+			//}, 5);
 		}
 		
 		Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Enabled Successfully"));	
