@@ -15,6 +15,7 @@ import mineverse.Aust1n46.chat.ChatMessage;
 import mineverse.Aust1n46.chat.channel.ChatChannel;
 import mineverse.Aust1n46.chat.command.mute.MuteContainer;
 import mineverse.Aust1n46.chat.json.JsonFormat;
+import org.bukkit.metadata.MetadataValue;
 
 /**
  * Wrapper for {@link Player}
@@ -53,6 +54,7 @@ public class MineverseChatPlayer {
 	private boolean rangedSpy;
 	private boolean messageToggle;
 	private boolean bungeeToggle;
+	private boolean vanished;
 	
 	@Deprecated
 	public MineverseChatPlayer(UUID uuid, String name, ChatChannel currentChannel, Set<UUID> ignores, Set<String> listening, HashMap<String, MuteContainer> mutes, Set<String> blockedCommands, boolean host, UUID party, boolean filter, boolean notifications, String nickname, String jsonFormat, boolean spy, boolean commandSpy, boolean rangedSpy, boolean messageToggle, boolean bungeeToggle) {
@@ -544,5 +546,14 @@ public class MineverseChatPlayer {
 				}
 			}
 		}
+	}
+
+	public void setVanished(boolean vanished) {
+		this.vanished = vanished;
+	}
+
+	public boolean isVanished() {
+		if(!online) return vanished;
+		return getPlayer().getMetadata("vanished").stream().anyMatch(MetadataValue::asBoolean);
 	}
 }

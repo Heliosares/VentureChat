@@ -62,7 +62,7 @@ public class ProxyPlayerData {
                 }
                 boolean spy = playerData.getBoolean(uuidString + ".spy");
                 boolean messageToggle = playerData.getBoolean(uuidString + ".messagetoggle");
-                MineverseChatAPI.addSynchronizedMineverseChatPlayerToMap(new SynchronizedMineverseChatPlayer(uuid, listening, mutes, ignores, spy, messageToggle));
+                MineverseChatAPI.addSynchronizedMineverseChatPlayerToMap(new SynchronizedMineverseChatPlayer(uuid, listening, mutes, ignores, spy, messageToggle, false));
             }
         } catch (Exception e) {
             MineverseChatAPI.clearProxyPlayerMap();
@@ -123,7 +123,7 @@ public class ProxyPlayerData {
             }
             boolean spy = proxyPlayerDataFileConfiguration.getBoolean("spy");
             boolean messageToggle = proxyPlayerDataFileConfiguration.getBoolean("messagetoggle");
-            smcp = new SynchronizedMineverseChatPlayer(uuid, listening, mutes, ignores, spy, messageToggle);
+            smcp = new SynchronizedMineverseChatPlayer(uuid, listening, mutes, ignores, spy, messageToggle, false);
         } catch (Exception e) {
         	source.sendConsoleMessage("&8[&eVentureChat&8]&c - Error Loading Data File: " + proxyPlayerDataFile.getName());
         	source.sendConsoleMessage("&8[&eVentureChat&8]&c - File will be skipped and deleted.");

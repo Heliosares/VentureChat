@@ -339,6 +339,7 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 				}
 				out.writeBoolean(mcp.isSpy());
 				out.writeBoolean(mcp.getMessageToggle());
+				out.writeBoolean(mcp.isVanished());
 			}
 			sendPluginMessage(outstream);
 			// System.out.println("Sync start bottom...");
@@ -573,6 +574,7 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 				// System.out.println(msgin.available() + " available before");
 				p.setSpy(msgin.readBoolean());
 				p.setMessageToggle(msgin.readBoolean());
+				p.setVanished(msgin.readBoolean());
 				// System.out.println(msgin.available() + " available after");
 				for(Object o : p.getIgnores().toArray()) {
 					p.removeIgnore((UUID) o);

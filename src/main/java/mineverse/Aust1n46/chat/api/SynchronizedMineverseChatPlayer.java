@@ -20,13 +20,16 @@ public class SynchronizedMineverseChatPlayer {
     private boolean spy;
     private boolean messageToggle;
 
-    public SynchronizedMineverseChatPlayer(UUID uuid, Set<String> listening, HashMap<String, MuteContainer> mutes, Set<UUID> ignores, boolean spy, boolean messageToggle) {
+    private boolean vanished;
+
+    public SynchronizedMineverseChatPlayer(UUID uuid, Set<String> listening, HashMap<String, MuteContainer> mutes, Set<UUID> ignores, boolean spy, boolean messageToggle, boolean vanished) {
         this.uuid = uuid;
         this.listening = listening;
         this.mutes = mutes;
         this.ignores = ignores;
         this.spy = spy;
         this.messageToggle = messageToggle;
+        this.vanished = vanished;
     }
 
     public SynchronizedMineverseChatPlayer(UUID uuid) {
@@ -116,5 +119,13 @@ public class SynchronizedMineverseChatPlayer {
 
     public void setMessageToggle(boolean messageToggle) {
         this.messageToggle = messageToggle;
+    }
+
+    public boolean isVanished() {
+        return vanished;
+    }
+
+    public void setVanished(boolean vanished) {
+        this.vanished = vanished;
     }
 }

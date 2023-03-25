@@ -547,6 +547,7 @@ public class VentureChatProxy {
 					if(!source.getServer(server).isEmpty()) {
 						source.sendPluginMessage(server, outstream.toByteArray());
 					}
+					out.writeBoolean(smcp.isVanished());
 				}
 				if(identifier.equals("Update")) {
 					UUID uuid = UUID.fromString(in.readUTF());
@@ -579,6 +580,7 @@ public class VentureChatProxy {
 					}
 					smcp.setSpy(in.readBoolean());
 					smcp.setMessageToggle(in.readBoolean());
+					smcp.setVanished(in.readBoolean());
 				}
 			}
 		}
