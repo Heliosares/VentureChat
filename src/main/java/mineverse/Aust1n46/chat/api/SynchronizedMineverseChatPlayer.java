@@ -20,7 +20,6 @@ public class SynchronizedMineverseChatPlayer {
     private boolean spy;
     private boolean messageToggle;
 
-    public SynchronizedMineverseChatPlayer(UUID uuid, Set<String> listening, HashMap<String, MuteContainer> mutes, Set<UUID> ignores, boolean spy, boolean messageToggle) {
     private boolean vanished;
 
     public SynchronizedMineverseChatPlayer(UUID uuid, Set<String> listening, HashMap<String, MuteContainer> mutes, Set<UUID> ignores, boolean spy, boolean messageToggle, boolean vanished) {
