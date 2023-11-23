@@ -23,12 +23,12 @@ public class Broadcast extends Command {
         String broadcastDisplayTag = Format.FormatStringAll(bs.getString("displaytag", "[Broadcast]"));
         if (broadcastPermissions.equalsIgnoreCase("None") || sender.hasPermission(broadcastPermissions)) {
             if (args.length > 0) {
-                String bc = "";
+                StringBuilder bc = new StringBuilder();
                 for (int x = 0; x < args.length; x++) {
                     if (!args[x].isEmpty())
-                        bc += args[x] + " ";
+                        bc.append(args[x]).append(" ");
                 }
-                bc = Format.FormatStringAll(bc);
+                bc = new StringBuilder(Format.FormatStringAll(bc.toString()));
                 Format.broadcastToServer(broadcastDisplayTag + ChatColor.valueOf(broadcastColor.toUpperCase()) + " " + bc);
                 return true;
             } else {

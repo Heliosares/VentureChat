@@ -24,28 +24,28 @@ public class Chatinfo extends Command {
                     return true;
                 }
                 MineverseChatPlayer mcp = MineverseChatAPI.getOnlineMineverseChatPlayer((Player) sender);
-                String listen = "";
-                String mute = "";
-                String blockedcommands = "";
+                StringBuilder listen = new StringBuilder();
+                StringBuilder mute = new StringBuilder();
+                StringBuilder blockedcommands = new StringBuilder();
                 mcp.getPlayer().sendMessage(ChatColor.GOLD + "Player: " + ChatColor.GREEN + mcp.getName());
                 for (String c : mcp.getListening()) {
                     ChatChannel channel = ChatChannel.getChannel(c);
-                    listen += channel.getColor() + channel.getName() + " ";
+                    listen.append(channel.getColor()).append(channel.getName()).append(" ");
                 }
                 for (MuteContainer muteContainer : mcp.getMutes()) {
                     ChatChannel channel = ChatChannel.getChannel(muteContainer.getChannel());
-                    mute += channel.getColor() + channel.getName() + " ";
+                    mute.append(channel.getColor()).append(channel.getName()).append(" ");
                 }
                 for (String bc : mcp.getBlockedCommands()) {
-                    blockedcommands += bc + " ";
+                    blockedcommands.append(bc).append(" ");
                 }
                 mcp.getPlayer().sendMessage(ChatColor.GOLD + "Listening: " + listen);
-                if (!mute.isEmpty()) {
+                if (mute.length() > 0) {
                     mcp.getPlayer().sendMessage(ChatColor.GOLD + "Mutes: " + mute);
                 } else {
                     mcp.getPlayer().sendMessage(ChatColor.GOLD + "Mutes: " + ChatColor.RED + "N/A");
                 }
-                if (!blockedcommands.isEmpty()) {
+                if (blockedcommands.length() > 0) {
                     mcp.getPlayer().sendMessage(ChatColor.GOLD + "Blocked Commands: " + ChatColor.RED + blockedcommands);
                 } else {
                     mcp.getPlayer().sendMessage(ChatColor.GOLD + "Blocked Commands: " + ChatColor.RED + "N/A");
@@ -74,9 +74,9 @@ public class Chatinfo extends Command {
                 return true;
             }
             if (sender.hasPermission("venturechat.chatinfo.others")) {
-                String listen = "";
-                String mute = "";
-                String blockedcommands = "";
+                StringBuilder listen = new StringBuilder();
+                StringBuilder mute = new StringBuilder();
+                StringBuilder blockedcommands = new StringBuilder();
                 MineverseChatPlayer p = MineverseChatAPI.getMineverseChatPlayer(args[0]);
                 if (p == null) {
                     sender.sendMessage(ChatColor.RED + "Player: " + ChatColor.GOLD + args[0] + ChatColor.RED + " is not online.");
@@ -85,22 +85,22 @@ public class Chatinfo extends Command {
                 sender.sendMessage(ChatColor.GOLD + "Player: " + ChatColor.GREEN + p.getName());
                 for (String c : p.getListening()) {
                     ChatChannel channel = ChatChannel.getChannel(c);
-                    listen += channel.getColor() + channel.getName() + " ";
+                    listen.append(channel.getColor()).append(channel.getName()).append(" ");
                 }
                 for (MuteContainer muteContainer : p.getMutes()) {
                     ChatChannel channel = ChatChannel.getChannel(muteContainer.getChannel());
-                    mute += channel.getColor() + channel.getName() + " ";
+                    mute.append(channel.getColor()).append(channel.getName()).append(" ");
                 }
                 for (String bc : p.getBlockedCommands()) {
-                    blockedcommands += bc + " ";
+                    blockedcommands.append(bc).append(" ");
                 }
                 sender.sendMessage(ChatColor.GOLD + "Listening: " + listen);
-                if (!mute.isEmpty()) {
+                if (mute.length() > 0) {
                     sender.sendMessage(ChatColor.GOLD + "Mutes: " + mute);
                 } else {
                     sender.sendMessage(ChatColor.GOLD + "Mutes: " + ChatColor.RED + "N/A");
                 }
-                if (!blockedcommands.isEmpty()) {
+                if (blockedcommands.length() > 0) {
                     sender.sendMessage(ChatColor.GOLD + "Blocked Commands: " + ChatColor.RED + blockedcommands);
                 } else {
                     sender.sendMessage(ChatColor.GOLD + "Blocked Commands: " + ChatColor.RED + "N/A");

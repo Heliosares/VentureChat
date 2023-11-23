@@ -1,6 +1,5 @@
 package mineverse.Aust1n46.chat.command.chat;
 
-import com.massivecraft.factions.entity.MPlayer;
 import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.towny.object.Resident;
 import mineverse.Aust1n46.chat.MineverseChat;
@@ -29,7 +28,7 @@ public class Chwho extends Command {
 
     @Override
     public boolean execute(CommandSender sender, String command, String[] args) {
-        String playerlist = "";
+        StringBuilder playerlist = new StringBuilder();
         if (sender.hasPermission("venturechat.chwho")) {
             if (args.length > 0) {
                 ChatChannel channel = ChatChannel.getChannel(args[0]);
@@ -82,15 +81,15 @@ public class Chwho extends Command {
                                         Resident pp = towny.getResident(sender.getName());
                                         if (!pp.hasTown()) {
                                             if (playerlist.length() + p.getName().length() > linecount) {
-                                                playerlist += "\n";
+                                                playerlist.append("\n");
                                                 linecount = linecount + LINE_LENGTH;
                                             }
                                             if (!p.isMuted(channel.getName())) {
-                                                playerlist += ChatColor.WHITE + p.getName();
+                                                playerlist.append(ChatColor.WHITE).append(p.getName());
                                             } else {
-                                                playerlist += ChatColor.RED + p.getName();
+                                                playerlist.append(ChatColor.RED).append(p.getName());
                                             }
-                                            playerlist += ChatColor.WHITE + ", ";
+                                            playerlist.append(ChatColor.WHITE + ", ");
                                             break;
                                         } else if (!r.hasTown()) {
                                             continue;
@@ -103,15 +102,15 @@ public class Chwho extends Command {
                                         Resident pp = towny.getResident(sender.getName());
                                         if (!pp.hasNation()) {
                                             if (playerlist.length() + p.getName().length() > linecount) {
-                                                playerlist += "\n";
+                                                playerlist.append("\n");
                                                 linecount = linecount + LINE_LENGTH;
                                             }
                                             if (!p.isMuted(channel.getName())) {
-                                                playerlist += ChatColor.WHITE + p.getName();
+                                                playerlist.append(ChatColor.WHITE).append(p.getName());
                                             } else {
-                                                playerlist += ChatColor.RED + p.getName();
+                                                playerlist.append(ChatColor.RED).append(p.getName());
                                             }
-                                            playerlist += ChatColor.WHITE + ", ";
+                                            playerlist.append(ChatColor.WHITE + ", ");
                                             break;
                                         } else if (!r.hasNation()) {
                                             continue;
@@ -123,51 +122,24 @@ public class Chwho extends Command {
                                     ex.printStackTrace();
                                 }
                             }
-                            if (plugin.getConfig().getBoolean("enable_factions_channel") && pluginManager.isPluginEnabled("Factions") && sender instanceof Player) {
-                                try {
-                                    if (channel.getName().equalsIgnoreCase("Faction")) {
-                                        MPlayer mplayer = MPlayer.get(p.getPlayer());
-                                        MPlayer mplayerp = MPlayer.get(sender);
-                                        if (!mplayerp.hasFaction()) {
-                                            if (playerlist.length() + p.getName().length() > linecount) {
-                                                playerlist += "\n";
-                                                linecount = linecount + LINE_LENGTH;
-                                            }
-                                            if (!p.isMuted(channel.getName())) {
-                                                playerlist += ChatColor.WHITE + p.getName();
-                                            } else {
-                                                playerlist += ChatColor.RED + p.getName();
-                                            }
-                                            playerlist += ChatColor.WHITE + ", ";
-                                            break;
-                                        } else if (!mplayerp.hasFaction()) {
-                                            continue;
-                                        } else if (!(mplayer.getFactionName().equals(mplayerp.getFactionName()))) {
-                                            continue;
-                                        }
-                                    }
-                                } catch (Exception ex) {
-                                    ex.printStackTrace();
-                                }
-                            }
                             if (playerlist.length() + p.getName().length() > linecount) {
-                                playerlist += "\n";
+                                playerlist.append("\n");
                                 linecount = linecount + LINE_LENGTH;
                             }
                             if (!p.isMuted(channel.getName())) {
-                                playerlist += ChatColor.WHITE + p.getName();
+                                playerlist.append(ChatColor.WHITE).append(p.getName());
                             } else {
-                                playerlist += ChatColor.RED + p.getName();
+                                playerlist.append(ChatColor.RED).append(p.getName());
                             }
-                            playerlist += ChatColor.WHITE + ", ";
+                            playerlist.append(ChatColor.WHITE + ", ");
                         }
                     }
                     if (playerlist.length() > 2) {
-                        playerlist = playerlist.substring(0, playerlist.length() - 2);
+                        playerlist = new StringBuilder(playerlist.substring(0, playerlist.length() - 2));
                     }
                     sender.sendMessage(LocalizedMessage.CHANNEL_PLAYER_LIST_HEADER.toString().replace("{channel_color}", (channel.getColor())).replace("{channel_name}",
                             channel.getName()));
-                    sender.sendMessage(playerlist);
+                    sender.sendMessage(playerlist.toString());
                     return true;
                 } else {
                     sender.sendMessage(LocalizedMessage.INVALID_CHANNEL.toString().replace("{args}", args[0]));
@@ -184,7 +156,7 @@ public class Chwho extends Command {
     }
 
     private boolean isPlayerWithinDistance(Player p1, Player p2, double Distance) {
-        Double chDistance = Distance;
+        double chDistance = Distance;
         Location locreceip;
         Location locsender = p1.getLocation();
         Location diff;

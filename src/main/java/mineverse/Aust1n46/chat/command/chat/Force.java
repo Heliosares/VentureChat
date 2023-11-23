@@ -23,12 +23,12 @@ public class Force extends Command {
                 sender.sendMessage(LocalizedMessage.PLAYER_OFFLINE.toString().replace("{args}", args[0]));
                 return true;
             }
-            String forcemsg = "";
+            StringBuilder forcemsg = new StringBuilder();
             for (int x = 1; x < args.length; x++)
                 if (!args[x].isEmpty())
-                    forcemsg += args[x] + " ";
-            sender.sendMessage(LocalizedMessage.FORCE_PLAYER.toString().replace("{player}", player.getName()).replace("{message}", forcemsg));
-            player.getPlayer().chat(forcemsg);
+                    forcemsg.append(args[x]).append(" ");
+            sender.sendMessage(LocalizedMessage.FORCE_PLAYER.toString().replace("{player}", player.getName()).replace("{message}", forcemsg.toString()));
+            player.getPlayer().chat(forcemsg.toString());
             return true;
         }
         sender.sendMessage(LocalizedMessage.COMMAND_NO_PERMISSION.toString());

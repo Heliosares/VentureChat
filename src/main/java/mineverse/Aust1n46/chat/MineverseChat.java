@@ -13,7 +13,6 @@ import mineverse.Aust1n46.chat.channel.ChatChannelInfo;
 import mineverse.Aust1n46.chat.command.VentureCommandExecutor;
 import mineverse.Aust1n46.chat.command.chat.Channel;
 import mineverse.Aust1n46.chat.command.mute.MuteContainer;
-import mineverse.Aust1n46.chat.database.Database;
 import mineverse.Aust1n46.chat.database.PlayerData;
 import mineverse.Aust1n46.chat.gui.GuiSlot;
 import mineverse.Aust1n46.chat.json.JsonFormat;
@@ -198,10 +197,6 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
         PlayerData.loadLegacyPlayerData();
         PlayerData.loadPlayerData();
 
-        Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-            Database.initializeMySQL();
-        });
-
         VentureCommandExecutor.initialize();
 
         registerListeners();
@@ -305,10 +300,6 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 
                 Bukkit.getConsoleSender().sendMessage(consoleChat);
 
-                if (Database.isEnabled()) {
-                    Database.writeVentureChat(senderUUID.toString(), senderName, server, chatchannel, chat.replace("'", "''"), "Chat");
-                }
-
                 for (MineverseChatPlayer p : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
                     if (p.isListening(chatChannelObject.getName())) {
                         if (!p.getBungeeToggle() && MineverseChatAPI.getOnlineMineverseChatPlayer(senderName) == null) {
@@ -392,18 +383,18 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
                     String stringchannel = msgin.readUTF();
                     MineverseChatPlayer mcp = MineverseChatAPI.getOnlineMineverseChatPlayer(UUID.fromString(sender));
                     ChatChannel chatchannel = ChatChannel.getChannel(stringchannel);
-                    String playerList = "";
+                    StringBuilder playerList = new StringBuilder();
                     int size = msgin.readInt();
                     for (int a = 0; a < size; a++) {
-                        playerList += msgin.readUTF() + ChatColor.WHITE + ", ";
+                        playerList.append(msgin.readUTF()).append(ChatColor.WHITE).append(", ");
                     }
                     if (playerList.length() > 2) {
-                        playerList = playerList.substring(0, playerList.length() - 2);
+                        playerList = new StringBuilder(playerList.substring(0, playerList.length() - 2));
                     }
                     mcp.getPlayer().sendMessage(LocalizedMessage.CHANNEL_PLAYER_LIST_HEADER.toString()
                             .replace("{channel_color}", chatchannel.getColor())
                             .replace("{channel_name}", chatchannel.getName()));
-                    mcp.getPlayer().sendMessage(Format.FormatStringAll(playerList));
+                    mcp.getPlayer().sendMessage(Format.FormatStringAll(playerList.toString()));
                 }
             }
             if (subchannel.equals("RemoveMessage")) {

@@ -18,15 +18,15 @@ public class Forceall extends Command {
                 sender.sendMessage(LocalizedMessage.COMMAND_INVALID_ARGUMENTS.toString().replace("{command}", "/forceall").replace("{args}", "[message]"));
                 return true;
             }
-            String forcemsg = "";
+            StringBuilder forcemsg = new StringBuilder();
             for (int x = 0; x < args.length; x++) {
                 if (!args[x].isEmpty()) {
-                    forcemsg += args[x] + " ";
+                    forcemsg.append(args[x]).append(" ");
                 }
             }
-            sender.sendMessage(LocalizedMessage.FORCE_ALL.toString().replace("{message}", forcemsg));
+            sender.sendMessage(LocalizedMessage.FORCE_ALL.toString().replace("{message}", forcemsg.toString()));
             for (MineverseChatPlayer player : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
-                player.getPlayer().chat(forcemsg);
+                player.getPlayer().chat(forcemsg.toString());
             }
             return true;
         }

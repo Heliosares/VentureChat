@@ -16,20 +16,20 @@ public class Me extends Command {
     public boolean execute(CommandSender sender, String command, String[] args) {
         if (sender.hasPermission("venturechat.me")) {
             if (args.length > 0) {
-                String msg = "";
+                StringBuilder msg = new StringBuilder();
                 for (int x = 0; x < args.length; x++)
                     if (!args[x].isEmpty())
-                        msg += " " + args[x];
+                        msg.append(" ").append(args[x]);
                 if (sender instanceof Player && MineverseChatAPI.getOnlineMineverseChatPlayer((Player) sender).hasFilter()) {
-                    msg = Format.FilterChat(msg);
+                    msg = new StringBuilder(Format.FilterChat(msg.toString()));
                 }
                 if (sender.hasPermission("venturechat.color.legacy")) {
-                    msg = Format.FormatStringLegacyColor(msg);
+                    msg = new StringBuilder(Format.FormatStringLegacyColor(msg.toString()));
                 }
                 if (sender.hasPermission("venturechat.color"))
-                    msg = Format.FormatStringColor(msg, sender.hasPermission("venturechat.color.hex"));
+                    msg = new StringBuilder(Format.FormatStringColor(msg.toString(), sender.hasPermission("venturechat.color.hex")));
                 if (sender.hasPermission("venturechat.format"))
-                    msg = Format.FormatString(msg, sender.hasPermission("venturechat.format.magic"));
+                    msg = new StringBuilder(Format.FormatString(msg.toString(), sender.hasPermission("venturechat.format.magic")));
                 if (sender instanceof Player p) {
 					Format.broadcastToServer("* " + p.getDisplayName() + msg);
                     return true;

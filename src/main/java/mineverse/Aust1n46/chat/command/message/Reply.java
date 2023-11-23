@@ -52,34 +52,34 @@ public class Reply extends Command {
                     mcp.getPlayer().sendMessage(LocalizedMessage.BLOCKING_MESSAGE.toString().replace("{player}", player.getName()));
                     return true;
                 }
-                String msg = "";
+                StringBuilder msg = new StringBuilder();
                 String echo = "";
                 String send = "";
                 String spy = "";
                 if (args.length > 0) {
                     for (int r = 0; r < args.length; r++)
-                        msg += " " + args[r];
+                        msg.append(" ").append(args[r]);
                     if (mcp.hasFilter()) {
-                        msg = Format.FilterChat(msg);
+                        msg = new StringBuilder(Format.FilterChat(msg.toString()));
                     }
                     if (mcp.getPlayer().hasPermission("venturechat.color.legacy")) {
-                        msg = Format.FormatStringLegacyColor(msg);
+                        msg = new StringBuilder(Format.FormatStringLegacyColor(msg.toString()));
                     }
                     if (mcp.getPlayer().hasPermission("venturechat.color")) {
-                        msg = Format.FormatStringColor(msg, mcp.getPlayer().hasPermission("venturechat.color.hex"));
+                        msg = new StringBuilder(Format.FormatStringColor(msg.toString(), mcp.getPlayer().hasPermission("venturechat.color.hex")));
                     }
                     if (mcp.getPlayer().hasPermission("venturechat.format")) {
-                        msg = Format.FormatString(msg, mcp.getPlayer().hasPermission("venturechat.format.magic"));
+                        msg = new StringBuilder(Format.FormatString(msg.toString(), mcp.getPlayer().hasPermission("venturechat.format.magic")));
                     }
 
-                    PrivateMessageEvent privateMessageEvent = new PrivateMessageEvent(mcp, player, msg, true);
+                    PrivateMessageEvent privateMessageEvent = new PrivateMessageEvent(mcp, player, msg.toString(), true);
                     plugin.getServer().getPluginManager().callEvent(privateMessageEvent);
                     if (privateMessageEvent.isCancelled()) {
                         if (privateMessageEvent.getErrorMessage() != null)
                             sender.sendMessage(privateMessageEvent.getErrorMessage());
                         return true;
                     }
-                    msg = privateMessageEvent.getChat();
+                    msg = new StringBuilder(privateMessageEvent.getChat());
 
                     send = Format
                             .FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcp.getPlayer(), plugin.getConfig().getString("replyformatfrom").replaceAll("sender_", "")));
@@ -121,7 +121,7 @@ public class Reply extends Command {
         DataOutputStream out = new DataOutputStream(byteOutStream);
         StringBuilder msgBuilder = new StringBuilder();
         for (int r = 0; r < args.length; r++) {
-            msgBuilder.append(" " + args[r]);
+            msgBuilder.append(" ").append(args[r]);
         }
         String msg = msgBuilder.toString();
         if (mcp.hasFilter()) {

@@ -52,12 +52,12 @@ public class ChannelAlias extends Command {
                     if (channel.getBungee()) {
                         MineverseChat.synchronize(mcp, true);
                     }
-                    String msg = "";
+                    StringBuilder msg = new StringBuilder();
                     for (int x = 0; x < args.length; x++) {
                         if (!args[x].isEmpty())
-                            msg += " " + args[x];
+                            msg.append(" ").append(args[x]);
                     }
-                    mcp.getPlayer().chat(msg);
+                    mcp.getPlayer().chat(msg.toString());
                     return true;
                 }
             }

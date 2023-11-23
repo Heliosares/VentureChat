@@ -36,17 +36,17 @@ public class Ignore extends Command {
             return true;
         }
         if (args[0].equalsIgnoreCase("list")) {
-            String ignoreList = "";
+            StringBuilder ignoreList = new StringBuilder();
             for (UUID ignore : mcp.getIgnores()) {
                 MineverseChatPlayer i = MineverseChatAPI.getMineverseChatPlayer(ignore);
                 String iName = ignore.toString();
                 if (i != null) {
                     iName = i.getName();
                 }
-                ignoreList += ChatColor.RED + iName + ChatColor.WHITE + ", ";
+                ignoreList.append(ChatColor.RED).append(iName).append(ChatColor.WHITE).append(", ");
             }
             mcp.getPlayer().sendMessage(LocalizedMessage.IGNORE_LIST_HEADER.toString());
-            if (!ignoreList.isEmpty()) {
+            if (ignoreList.length() > 0) {
                 mcp.getPlayer().sendMessage(ignoreList.substring(0, ignoreList.length() - 2));
             }
             return true;

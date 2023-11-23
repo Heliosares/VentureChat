@@ -538,13 +538,13 @@ public class Config extends Command {
                     }
                     case "tellformatto": {
                         try {
-                            String format = args[1] + " ";
+                            StringBuilder format = new StringBuilder(args[1] + " ");
                             for (int x = 2; x < args.length; x++) {
                                 if (!args[x].isEmpty())
-                                    format += args[x] + " ";
+                                    format.append(args[x]).append(" ");
                             }
-                            format = format.substring(0, format.length() - 1);
-                            plugin.getConfig().set("tellformatto", format);
+                            format = new StringBuilder(format.substring(0, format.length() - 1));
+                            plugin.getConfig().set("tellformatto", format.toString());
                             sender.sendMessage(ChatColor.GREEN + "tellformatto: has been set to " + format);
                             plugin.saveConfig();
                             plugin.reloadConfig();
@@ -558,13 +558,13 @@ public class Config extends Command {
                     }
                     case "tellformatfrom": {
                         try {
-                            String format = args[1] + " ";
+                            StringBuilder format = new StringBuilder(args[1] + " ");
                             for (int x = 2; x < args.length; x++) {
                                 if (!args[x].isEmpty())
-                                    format += args[x] + " ";
+                                    format.append(args[x]).append(" ");
                             }
-                            format = format.substring(0, format.length() - 1);
-                            plugin.getConfig().set("tellformatfrom", format);
+                            format = new StringBuilder(format.substring(0, format.length() - 1));
+                            plugin.getConfig().set("tellformatfrom", format.toString());
                             sender.sendMessage(ChatColor.GREEN + "tellformatfrom: has been set to " + format);
                             plugin.saveConfig();
                             plugin.reloadConfig();
@@ -578,13 +578,13 @@ public class Config extends Command {
                     }
                     case "tellformatspy": {
                         try {
-                            String format = args[1] + " ";
+                            StringBuilder format = new StringBuilder(args[1] + " ");
                             for (int x = 2; x < args.length; x++) {
                                 if (!args[x].isEmpty())
-                                    format += args[x] + " ";
+                                    format.append(args[x]).append(" ");
                             }
-                            format = format.substring(0, format.length() - 1);
-                            plugin.getConfig().set("tellformatspy", format);
+                            format = new StringBuilder(format.substring(0, format.length() - 1));
+                            plugin.getConfig().set("tellformatspy", format.toString());
                             sender.sendMessage(ChatColor.GREEN + "tellformatspy: has been set to " + format);
                             plugin.saveConfig();
                             plugin.reloadConfig();
@@ -598,13 +598,13 @@ public class Config extends Command {
                     }
                     case "replyformatto": {
                         try {
-                            String format = args[1] + " ";
+                            StringBuilder format = new StringBuilder(args[1] + " ");
                             for (int x = 2; x < args.length; x++) {
                                 if (!args[x].isEmpty())
-                                    format += args[x] + " ";
+                                    format.append(args[x]).append(" ");
                             }
-                            format = format.substring(0, format.length() - 1);
-                            plugin.getConfig().set("replyformatto", format);
+                            format = new StringBuilder(format.substring(0, format.length() - 1));
+                            plugin.getConfig().set("replyformatto", format.toString());
                             sender.sendMessage(ChatColor.GREEN + "replyformatto: has been set to " + format);
                             plugin.saveConfig();
                             plugin.reloadConfig();
@@ -618,13 +618,13 @@ public class Config extends Command {
                     }
                     case "replyformatfrom": {
                         try {
-                            String format = args[1] + " ";
+                            StringBuilder format = new StringBuilder(args[1] + " ");
                             for (int x = 2; x < args.length; x++) {
                                 if (!args[x].isEmpty())
-                                    format += args[x] + " ";
+                                    format.append(args[x]).append(" ");
                             }
-                            format = format.substring(0, format.length() - 1);
-                            plugin.getConfig().set("replyformatfrom", format);
+                            format = new StringBuilder(format.substring(0, format.length() - 1));
+                            plugin.getConfig().set("replyformatfrom", format.toString());
                             sender.sendMessage(ChatColor.GREEN + "replyformatfrom: has been set to " + format);
                             plugin.saveConfig();
                             plugin.reloadConfig();
@@ -638,13 +638,13 @@ public class Config extends Command {
                     }
                     case "replyformatspy": {
                         try {
-                            String format = args[1] + " ";
+                            StringBuilder format = new StringBuilder(args[1] + " ");
                             for (int x = 2; x < args.length; x++) {
                                 if (!args[x].isEmpty())
-                                    format += args[x] + " ";
+                                    format.append(args[x]).append(" ");
                             }
-                            format = format.substring(0, format.length() - 1);
-                            plugin.getConfig().set("replyformatspy", format);
+                            format = new StringBuilder(format.substring(0, format.length() - 1));
+                            plugin.getConfig().set("replyformatspy", format.toString());
                             sender.sendMessage(ChatColor.GREEN + "replyformatspy: has been set to " + format);
                             plugin.saveConfig();
                             plugin.reloadConfig();
@@ -658,13 +658,13 @@ public class Config extends Command {
                     }
                     case "partyformat": {
                         try {
-                            String format = args[1] + " ";
+                            StringBuilder format = new StringBuilder(args[1] + " ");
                             for (int x = 2; x < args.length; x++) {
                                 if (!args[x].isEmpty())
-                                    format += args[x] + " ";
+                                    format.append(args[x]).append(" ");
                             }
-                            format = format.substring(0, format.length() - 1);
-                            plugin.getConfig().set("partyformat", format);
+                            format = new StringBuilder(format.substring(0, format.length() - 1));
+                            plugin.getConfig().set("partyformat", format.toString());
                             sender.sendMessage(ChatColor.GREEN + "partyformat: has been set to " + format);
                             plugin.saveConfig();
                             plugin.reloadConfig();
@@ -1064,13 +1064,13 @@ public class Config extends Command {
                                         }
                                         case "format": {
                                             try {
-                                                String format = args[3] + " ";
+                                                StringBuilder format = new StringBuilder(args[3] + " ");
                                                 for (int x = 4; x < args.length; x++) {
                                                     if (!args[x].isEmpty())
-                                                        format += args[x] + " ";
+                                                        format.append(args[x]).append(" ");
                                                 }
-                                                format = format.substring(0, format.length() - 1);
-                                                plugin.getConfig().getConfigurationSection("channels." + args[1]).set("format", format);
+                                                format = new StringBuilder(format.substring(0, format.length() - 1));
+                                                plugin.getConfig().getConfigurationSection("channels." + args[1]).set("format", format.toString());
                                                 sender.sendMessage(ChatColor.GREEN + "format: has been set to " + format);
                                                 plugin.saveConfig();
                                                 plugin.reloadConfig();

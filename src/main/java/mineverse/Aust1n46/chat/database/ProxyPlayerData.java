@@ -95,24 +95,24 @@ public class ProxyPlayerData {
                 }
                 Configuration proxyPlayerDataFileConfiguration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(proxyPlayerDataFile);
 
-                String listen = "";
+                StringBuilder listen = new StringBuilder();
                 for (String s : p.getListening())
-                    listen += s + ",";
-                String ignore = "";
+                    listen.append(s).append(",");
+                StringBuilder ignore = new StringBuilder();
                 for (UUID s : p.getIgnores())
-                    ignore += s.toString() + ",";
-                if (!listen.isEmpty())
-                    listen = listen.substring(0, listen.length() - 1);
-                if (!ignore.isEmpty())
-                    ignore = ignore.substring(0, ignore.length() - 1);
-                proxyPlayerDataFileConfiguration.set("channels", listen);
+                    ignore.append(s.toString()).append(",");
+                if (listen.length() > 0)
+                    listen = new StringBuilder(listen.substring(0, listen.length() - 1));
+                if (ignore.length() > 0)
+                    ignore = new StringBuilder(ignore.substring(0, ignore.length() - 1));
+                proxyPlayerDataFileConfiguration.set("channels", listen.toString());
                 Configuration muteSection = createSection(proxyPlayerDataFileConfiguration, "mutes");
                 for (MuteContainer mute : p.getMutes()) {
                     Configuration channelSection = createSection(muteSection, mute.getChannel());
                     channelSection.set("time", mute.getDuration());
                     channelSection.set("reason", mute.getReason());
                 }
-                proxyPlayerDataFileConfiguration.set("ignores", ignore);
+                proxyPlayerDataFileConfiguration.set("ignores", ignore.toString());
                 proxyPlayerDataFileConfiguration.set("spy", p.isSpy());
                 proxyPlayerDataFileConfiguration.set("messagetoggle", p.getMessageToggle());
 

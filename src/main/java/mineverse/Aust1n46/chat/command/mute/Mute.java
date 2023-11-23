@@ -52,7 +52,7 @@ public class Mute extends Command {
                         }
                         StringBuilder reasonBuilder = new StringBuilder();
                         for (int a = reasonStartPos; a < args.length; a++) {
-                            reasonBuilder.append(args[a] + " ");
+                            reasonBuilder.append(args[a]).append(" ");
                         }
                         reason = Format.FormatStringAll(reasonBuilder.toString().trim());
                     }

@@ -238,23 +238,23 @@ public class Party extends Command {
                         MineverseChatPlayer player = MineverseChatAPI.getMineverseChatPlayer(args[1]);
                         if (player != null) {
                             if (player.isHost()) {
-                                String members = "";
+                                StringBuilder members = new StringBuilder();
                                 long linecount = LINE_LENGTH;
                                 for (MineverseChatPlayer p : MineverseChatAPI.getMineverseChatPlayers()) {
                                     if (p.getParty() != null && p.getParty().equals(player.getUUID())) {
                                         if (members.length() + p.getName().length() > linecount) {
-                                            members += "\n";
+                                            members.append("\n");
                                             linecount = linecount + LINE_LENGTH;
                                         }
                                         if (p.isOnline()) {
-                                            members += ChatColor.GREEN + p.getName() + ChatColor.WHITE + ", ";
+                                            members.append(ChatColor.GREEN).append(p.getName()).append(ChatColor.WHITE).append(", ");
                                         } else {
-                                            members += ChatColor.RED + p.getName() + ChatColor.WHITE + ", ";
+                                            members.append(ChatColor.RED).append(p.getName()).append(ChatColor.WHITE).append(", ");
                                         }
                                     }
                                 }
                                 if (members.length() > 2) {
-                                    members = members.substring(0, members.length() - 2);
+                                    members = new StringBuilder(members.substring(0, members.length() - 2));
                                 }
                                 mcp.getPlayer().sendMessage(ChatColor.GREEN + "Members in " + player.getName() + "'s party: " + members);
                                 break;
@@ -273,23 +273,23 @@ public class Party extends Command {
                 if (!args[0].equals("host") && !args[0].equals("join") && !args[0].equals("leave") && !args[0].equals("kick") && !args[0].equals("info") && !args[0].equals("chat")
                         && !args[0].equals("help") && !args[0].equals("members") && !args[0].equals("ban") && !args[0].equals("unban")) {
                     if (mcp.hasParty()) {
-                        String msg = "";
+                        StringBuilder msg = new StringBuilder();
                         String partyformat = "";
                         for (int x = 0; x < args.length; x++) {
                             if (!args[x].isEmpty())
-                                msg += " " + args[x];
+                                msg.append(" ").append(args[x]);
                         }
                         if (mcp.hasFilter()) {
-                            msg = Format.FilterChat(msg);
+                            msg = new StringBuilder(Format.FilterChat(msg.toString()));
                         }
                         if (mcp.getPlayer().hasPermission("venturechat.color.legacy")) {
-                            msg = Format.FormatStringLegacyColor(msg);
+                            msg = new StringBuilder(Format.FormatStringLegacyColor(msg.toString()));
                         }
                         if (mcp.getPlayer().hasPermission("venturechat.color")) {
-                            msg = Format.FormatStringColor(msg, mcp.getPlayer().hasPermission("venturechat.color.hex"));
+                            msg = new StringBuilder(Format.FormatStringColor(msg.toString(), mcp.getPlayer().hasPermission("venturechat.color.hex")));
                         }
                         if (mcp.getPlayer().hasPermission("venturechat.format")) {
-                            msg = Format.FormatString(msg, mcp.getPlayer().hasPermission("venturechat.format.magic"));
+                            msg = new StringBuilder(Format.FormatString(msg.toString(), mcp.getPlayer().hasPermission("venturechat.format.magic")));
                         }
                         if (plugin.getConfig().getString("partyformat").equalsIgnoreCase("Default")) {
                             partyformat = ChatColor.GREEN + "[" + MineverseChatAPI.getMineverseChatPlayer(mcp.getParty()).getName() + "'s Party] " + mcp.getName() + ":" + msg;

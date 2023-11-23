@@ -12,7 +12,6 @@ import mineverse.Aust1n46.chat.json.JsonAttribute;
 import mineverse.Aust1n46.chat.json.JsonFormat;
 import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 import mineverse.Aust1n46.chat.versions.VersionHandler;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -80,15 +79,15 @@ public class Format {
     }
 
     public static String getLastCode(String s) {
-        String ts = "";
+        StringBuilder ts = new StringBuilder();
         char[] ch = s.toCharArray();
         for (int a = 0; a < s.length() - 1; a++) {
             if (String.valueOf(ch[a + 1]).matches("[lkomnLKOMN]") && ch[a] == BUKKIT_COLOR_CODE_PREFIX_CHAR) {
-                ts += String.valueOf(ch[a]) + ch[a + 1];
+                ts.append(String.valueOf(ch[a])).append(ch[a + 1]);
                 a++;
             } else if (String.valueOf(ch[a + 1]).matches("[0123456789abcdefrABCDEFR]")
                     && ch[a] == BUKKIT_COLOR_CODE_PREFIX_CHAR) {
-                ts = String.valueOf(ch[a]) + ch[a + 1];
+                ts = new StringBuilder(String.valueOf(ch[a]) + ch[a + 1]);
                 a++;
             } else if (ch[a + 1] == 'x' && ch[a] == BUKKIT_COLOR_CODE_PREFIX_CHAR) {
                 if (ch.length > a + 13) {
@@ -102,15 +101,15 @@ public class Format {
                             && ch[a + 6] == BUKKIT_COLOR_CODE_PREFIX_CHAR && ch[a + 8] == BUKKIT_COLOR_CODE_PREFIX_CHAR
                             && ch[a + 10] == BUKKIT_COLOR_CODE_PREFIX_CHAR
                             && ch[a + 12] == BUKKIT_COLOR_CODE_PREFIX_CHAR) {
-                        ts = String.valueOf(ch[a]) + ch[a + 1] + ch[a + 2] + ch[a + 3] + ch[a + 4] + ch[a + 5]
+                        ts = new StringBuilder(String.valueOf(ch[a]) + ch[a + 1] + ch[a + 2] + ch[a + 3] + ch[a + 4] + ch[a + 5]
                                 + ch[a + 6] + ch[a + 7] + ch[a + 8] + ch[a + 9] + ch[a + 10] + ch[a + 11] + ch[a + 12]
-                                + ch[a + 13];
+                                + ch[a + 13]);
                         a += 13;
                     }
                 }
             }
         }
-        return ts;
+        return ts.toString();
     }
 
     /**
@@ -225,7 +224,7 @@ public class Format {
                         jsonObject.put("italic", italic);
                         jsonObject.put("underlined", underlined);
                         jsonObject.put("obfuscated", obfuscated);
-                        stringbuilder.append(jsonObject.toJSONString() + ",");
+                        stringbuilder.append(jsonObject.toJSONString()).append(",");
                     } else {
                         String text = (String) component.getClass().getMethod("getString").invoke(component);
                         Object chatModifier = component.getClass().getMethod("c").invoke(component);
@@ -247,7 +246,7 @@ public class Format {
                         jsonObject.put("italic", italic);
                         jsonObject.put("underlined", underlined);
                         jsonObject.put("obfuscated", obfuscated);
-                        stringbuilder.append(jsonObject.toJSONString() + ",");
+                        stringbuilder.append(jsonObject.toJSONString()).append(",");
                     }
                 } catch (Exception e) {
                     return "\"extra\":[{\"text\":\"Something went wrong. Could not access color.\",\"color\":\"red\"}]";
@@ -303,7 +302,7 @@ public class Format {
         allFormated = allFormated.replaceAll("&[eE]", BUKKIT_COLOR_CODE_PREFIX + "e");
         allFormated = allFormated.replaceAll("&[fF]", BUKKIT_COLOR_CODE_PREFIX + "f");
 
-        allFormated = allFormated.replaceAll("%", "\\%");
+        allFormated = allFormated.replaceAll("%", "%");
 
         if (hex) allFormated = convertHexColorCodeStringToBukkitColorCodeString(allFormated);
         return allFormated;
@@ -327,7 +326,7 @@ public class Format {
         allFormated = allFormated.replaceAll(BUKKIT_COLOR_CODE_PREFIX + "[E]", BUKKIT_COLOR_CODE_PREFIX + "e");
         allFormated = allFormated.replaceAll(BUKKIT_COLOR_CODE_PREFIX + "[F]", BUKKIT_COLOR_CODE_PREFIX + "f");
 
-        allFormated = allFormated.replaceAll("%", "\\%");
+        allFormated = allFormated.replaceAll("%", "%");
         return allFormated;
     }
 
@@ -346,7 +345,7 @@ public class Format {
         allFormated = allFormated.replaceAll("&[oO]", BUKKIT_COLOR_CODE_PREFIX + "o");
         allFormated = allFormated.replaceAll("&[rR]", BUKKIT_COLOR_CODE_PREFIX + "r");
 
-        allFormated = allFormated.replaceAll("%", "\\%");
+        allFormated = allFormated.replaceAll("%", "%");
         return allFormated;
     }
 
@@ -384,7 +383,7 @@ public class Format {
     }
 
     public static boolean isValidColor(String color) {
-        Boolean bFound = false;
+        boolean bFound = false;
         for (ChatColor bkColors : ChatColor.values()) {
             if (color.equalsIgnoreCase(bkColors.name())) {
                 bFound = true;
@@ -416,7 +415,7 @@ public class Format {
         color = color.replace("&", "");
         StringBuilder bukkitColorCode = new StringBuilder(BUKKIT_COLOR_CODE_PREFIX + BUKKIT_HEX_COLOR_CODE_PREFIX);
         for (int a = 1; a < color.length(); a++) {
-            bukkitColorCode.append(BUKKIT_COLOR_CODE_PREFIX + color.charAt(a));
+            bukkitColorCode.append(BUKKIT_COLOR_CODE_PREFIX).append(color.charAt(a));
         }
         return bukkitColorCode.toString().toLowerCase();
     }
@@ -582,7 +581,7 @@ public class Format {
     }
 
     public static String stripColor(String message) {
-        return message.replaceAll("(\u00A7([a-z0-9]))", "");
+        return message.replaceAll("(§([a-z0-9]))", "");
     }
 
     /**
@@ -590,9 +589,6 @@ public class Format {
      *
      * @param s
      * @param format
-     * @param prefix
-     * @param nickname
-     * @param suffix
      * @param icp
      * @return {@link String}
      */
@@ -618,19 +614,19 @@ public class Format {
                     if (placeholder.contains(jsonAttribute.getName().replace("{", "").replace("}", ""))) {
                         final StringBuilder hover = new StringBuilder();
                         for (String st : jsonAttribute.getHoverText()) {
-                            hover.append(Format.FormatStringAll(st) + "\n");
+                            hover.append(Format.FormatStringAll(st)).append("\n");
                         }
                         final String hoverText;
                         if (!hover.isEmpty()) {
                             hoverText = escapeJsonChars(Format.FormatStringAll(
                                     PlaceholderAPI.setBracketPlaceholders(icp.getPlayer(), hover.substring(0, hover.length() - 1))));
                         } else {
-                            hoverText = StringUtils.EMPTY;
+                            hoverText = "";
                         }
                         final ClickAction clickAction = jsonAttribute.getClickAction();
                         final String actionJson;
                         if (clickAction == ClickAction.NONE) {
-                            actionJson = StringUtils.EMPTY;
+                            actionJson = "";
                         } else {
                             final String clickText = escapeJsonChars(Format.FormatStringAll(
                                     PlaceholderAPI.setBracketPlaceholders(icp.getPlayer(), jsonAttribute.getClickText())));
@@ -639,7 +635,7 @@ public class Format {
                         }
                         final String hoverJson;
                         if (hoverText.isEmpty()) {
-                            hoverJson = StringUtils.EMPTY;
+                            hoverJson = "";
                         } else {
                             hoverJson = ",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":["
                                     + convertToJsonColors(hoverText) + "]}}";
@@ -715,7 +711,7 @@ public class Format {
      */
     private static String convertToJsonColors(String s, String extensions) {
         String remaining = s;
-        String temp = "";
+        StringBuilder temp = new StringBuilder();
         int indexColor = -1;
         int indexNextColor = -1;
         String color = "";
@@ -729,7 +725,7 @@ public class Format {
         int colorLength = LEGACY_COLOR_CODE_LENGTH;
         do {
             if (remaining.length() < LEGACY_COLOR_CODE_LENGTH) {
-                temp = "{\"text\":\"" + remaining + "\"},";
+                temp = new StringBuilder("{\"text\":\"" + remaining + "\"},");
                 break;
             }
             modifier = "";
@@ -814,13 +810,12 @@ public class Format {
             if (indexNextColor == -1) {
                 indexNextColor = remaining.length();
             }
-            temp += "{\"text\":\"" + remaining.substring(0, indexNextColor) + "\",\"color\":\""
-                    + hexidecimalToJsonColorRGB(color) + "\"" + modifier + extensions + "},";
+            temp.append("{\"text\":\"").append(remaining.substring(0, indexNextColor)).append("\",\"color\":\"").append(hexidecimalToJsonColorRGB(color)).append("\"").append(modifier).append(extensions).append("},");
             remaining = remaining.substring(indexNextColor);
         } while (remaining.length() > 1 && indexColor != -1);
         if (temp.length() > 1)
-            temp = temp.substring(0, temp.length() - 1);
-        return temp;
+            temp = new StringBuilder(temp.substring(0, temp.length() - 1));
+        return temp.toString();
     }
 
     private static String hexidecimalToJsonColorRGB(String c) {

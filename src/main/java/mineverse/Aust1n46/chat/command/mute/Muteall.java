@@ -30,7 +30,7 @@ public class Muteall extends Command {
             if (args.length > 1) {
                 StringBuilder reasonBuilder = new StringBuilder();
                 for (int a = 1; a < args.length; a++) {
-                    reasonBuilder.append(args[a] + " ");
+                    reasonBuilder.append(args[a]).append(" ");
                 }
                 reason = Format.FormatStringAll(reasonBuilder.toString().trim());
             }

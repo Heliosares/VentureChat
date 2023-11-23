@@ -24,7 +24,7 @@ public class MuteContainer {
     }
 
     public boolean hasReason() {
-        return !reason.equals("");
+        return !reason.isEmpty();
     }
 
     public boolean hasDuration() {

@@ -1,7 +1,6 @@
 package mineverse.Aust1n46.chat.listeners;
 
 import com.comphenix.protocol.events.PacketContainer;
-import com.massivecraft.factions.entity.MPlayer;
 import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.towny.object.Resident;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -13,10 +12,8 @@ import mineverse.Aust1n46.chat.api.events.PrivateMessageEvent;
 import mineverse.Aust1n46.chat.api.events.VentureChatEvent;
 import mineverse.Aust1n46.chat.channel.ChatChannel;
 import mineverse.Aust1n46.chat.command.mute.MuteContainer;
-import mineverse.Aust1n46.chat.database.Database;
 import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 import mineverse.Aust1n46.chat.utilities.Format;
-import net.essentialsx.api.v2.services.discord.DiscordService;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -33,7 +30,6 @@ import java.util.Set;
 
 //This class listens to chat through the chat event and handles the bulk of the chat channels and formatting.
 public class ChatListener implements Listener {
-    private final boolean essentialsDiscordHook = Bukkit.getPluginManager().isPluginEnabled("EssentialsDiscord");
     private final MineverseChat plugin = MineverseChat.getInstance();
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -155,9 +151,6 @@ public class ChatListener implements Listener {
                 }
                 mcp.setReplyPlayer(tp.getUUID());
                 tp.setReplyPlayer(mcp.getUUID());
-                if (Database.isEnabled()) {
-                    Database.writeVentureChat(mcp.getUUID().toString(), mcp.getName(), "Local", "Messaging_Component", chat.replace("'", "''"), "Chat");
-                }
             }
             return;
         }
@@ -190,9 +183,6 @@ public class ChatListener implements Listener {
                     }
                 }
                 Bukkit.getConsoleSender().sendMessage(partyformat);
-                if (Database.isEnabled()) {
-                    Database.writeVentureChat(mcp.getUUID().toString(), mcp.getName(), "Local", "Party_Component", chat.replace("'", "''"), "Chat");
-                }
                 return;
             }
             mcp.getPlayer().sendMessage(ChatColor.RED + "You are not in a party.");
@@ -410,27 +400,6 @@ public class ChatListener implements Listener {
                     }
                 }
 
-                if (plugin.getConfig().getBoolean("enable_factions_channel") && pluginManager.isPluginEnabled("Factions")) {
-                    try {
-                        if (eventChannel.getName().equalsIgnoreCase("Faction")) {
-                            MPlayer mplayer = MPlayer.get(mcp.getPlayer());
-                            MPlayer mplayerp = MPlayer.get(p.getPlayer());
-                            if (!mplayer.hasFaction()) {
-                                recipients.remove(p.getPlayer());
-                                recipientCount--;
-                            } else if (!mplayerp.hasFaction()) {
-                                recipients.remove(p.getPlayer());
-                                recipientCount--;
-                            } else if (!(mplayer.getFactionName().equals(mplayerp.getFactionName()))) {
-                                recipients.remove(p.getPlayer());
-                                recipientCount--;
-                            }
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-
                 if (chDistance > (double) 0 && !bungee && !p.getRangedSpy()) {
                     locreceip = p.getPlayer().getLocation();
                     if (locreceip.getWorld() == mcp.getPlayer().getWorld()) {
@@ -452,7 +421,6 @@ public class ChatListener implements Listener {
                 }
                 if (!mcp.getPlayer().canSee(p.getPlayer())) {
                     recipientCount--;
-                    continue;
                 }
             }
         }
@@ -503,17 +471,9 @@ public class ChatListener implements Listener {
         int hash = event.getHash();
         boolean bungee = event.isBungee();
 
-        if (essentialsDiscordHook && channel.isDefaultchannel()) {
-            Bukkit.getServicesManager().load(DiscordService.class).sendChatMessage(mcp.getPlayer(), chat);
-        }
-
         if (!bungee) {
-            if (Database.isEnabled()) {
-                Database.writeVentureChat(mcp.getUUID().toString(), mcp.getName(), "Local", channel.getName(), chat.replace("'", "''"), "Chat");
-            }
-
             if (recipientCount == 1) {
-                if (!plugin.getConfig().getString("emptychannelalert", "&6No one is listening to you.").equals("")) {
+                if (!plugin.getConfig().getString("emptychannelalert", "&6No one is listening to you.").isEmpty()) {
                     mcp.getPlayer().sendMessage(Format.FormatStringAll(plugin.getConfig().getString("emptychannelalert", "&6No one is listening to you.")));
                 }
             }

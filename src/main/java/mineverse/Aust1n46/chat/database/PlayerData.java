@@ -130,24 +130,24 @@ public class PlayerData {
 
             playerDataFileYamlConfiguration.set("name", mcp.getName());
             playerDataFileYamlConfiguration.set("current", mcp.getCurrentChannel().getName());
-            String ignores = "";
+            StringBuilder ignores = new StringBuilder();
             for (UUID s : mcp.getIgnores()) {
-                ignores += s.toString() + ",";
+                ignores.append(s.toString()).append(",");
             }
-            playerDataFileYamlConfiguration.set("ignores", ignores);
-            String listening = "";
+            playerDataFileYamlConfiguration.set("ignores", ignores.toString());
+            StringBuilder listening = new StringBuilder();
             for (String channel : mcp.getListening()) {
                 ChatChannel c = ChatChannel.getChannel(channel);
-                listening += c.getName() + ",";
+                listening.append(c.getName()).append(",");
             }
-            String blockedCommands = "";
+            StringBuilder blockedCommands = new StringBuilder();
             for (String s : mcp.getBlockedCommands()) {
-                blockedCommands += s + ",";
+                blockedCommands.append(s).append(",");
             }
-            if (!listening.isEmpty()) {
-                listening = listening.substring(0, listening.length() - 1);
+            if (listening.length() > 0) {
+                listening = new StringBuilder(listening.substring(0, listening.length() - 1));
             }
-            playerDataFileYamlConfiguration.set("listen", listening);
+            playerDataFileYamlConfiguration.set("listen", listening.toString());
 
             ConfigurationSection muteSection = playerDataFileYamlConfiguration.createSection("mutes");
             for (MuteContainer mute : mcp.getMutes()) {
@@ -156,7 +156,7 @@ public class PlayerData {
                 channelSection.set("reason", mute.getReason());
             }
 
-            playerDataFileYamlConfiguration.set("blockedcommands", blockedCommands);
+            playerDataFileYamlConfiguration.set("blockedcommands", blockedCommands.toString());
             playerDataFileYamlConfiguration.set("host", mcp.isHost());
             playerDataFileYamlConfiguration.set("party", mcp.hasParty() ? mcp.getParty().toString() : "");
             playerDataFileYamlConfiguration.set("filter", mcp.hasFilter());
