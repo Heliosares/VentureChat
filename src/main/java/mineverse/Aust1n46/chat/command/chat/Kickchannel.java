@@ -42,7 +42,7 @@ public class Kickchannel extends Command {
 				player.setModified(true);
 			}
 			boolean isThereABungeeChannel = channel.getBungee();
-			if (player.getListening().size() == 0) {
+			if (player.getListening().isEmpty()) {
 				player.addListening(ChatChannel.getDefaultChannel().getName());
 				player.setCurrentChannel(ChatChannel.getDefaultChannel());
 				if (ChatChannel.getDefaultChannel().getBungee()) {

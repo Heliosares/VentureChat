@@ -57,30 +57,26 @@ import net.milkbowl.vault.permission.Permission;
 public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 	// Plugin Messaging Channel
 	public static final String PLUGIN_MESSAGING_CHANNEL = "venturechat:data";
-	
-	// Event constants
-	public static final boolean ASYNC = true;
-	public static final boolean SYNC = false;
-	
+
 	public static final int LINE_LENGTH = 40;
-	
+
 	// DiscordSRV backwards compatibility
 	@Deprecated
 	public static ChatChannelInfo ccInfo;
 
 	@Deprecated
-	public static Set<MineverseChatPlayer> players = new HashSet<MineverseChatPlayer>();
+	public static Set<MineverseChatPlayer> players = new HashSet<>();
 	@Deprecated
-	public static Set<MineverseChatPlayer> onlinePlayers = new HashSet<MineverseChatPlayer>();
+	public static Set<MineverseChatPlayer> onlinePlayers = new HashSet<>();
 
 	// Vault
 	private static Permission permission = null;
 	private static Chat chat = null;
-	
+
 	@Override
 	public void onEnable() {
 		ccInfo = new ChatChannelInfo();
-		
+
 		try {
 			Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Initializing..."));
 			if(!getDataFolder().exists()) {
@@ -99,9 +95,9 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 		catch(Exception ex) {
 			Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - &cCould not load configuration! Something unexpected went wrong!"));
 		}
-		
+
 		Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Checking for Vault..."));
-		
+
 		if(!setupPermissions() || !setupChat()) {
 			Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - &cCould not find Vault and/or a Vault compatible permissions plugin!"));
 			Bukkit.getPluginManager().disablePlugin(this);
@@ -109,11 +105,11 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 		}
 
 		initializeConfigReaders();
-		
+
 		Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Loading player data"));
 		PlayerData.loadLegacyPlayerData();
 		PlayerData.loadPlayerData();
-		
+
 		Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
 			Database.initializeMySQL();
 		});
@@ -123,11 +119,11 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 		registerListeners();
 		Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Registering Listeners"));
 		Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Attaching to Executors"));
-		
+
 		Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Establishing BungeeCord"));
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, PLUGIN_MESSAGING_CHANNEL);
 		Bukkit.getMessenger().registerIncomingPluginChannel(this, PLUGIN_MESSAGING_CHANNEL, this);
-		
+
 		PluginManager pluginManager = getServer().getPluginManager();
 		if(pluginManager.isPluginEnabled("Towny")) {
 			Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Enabling Towny Formatting"));
@@ -142,28 +138,21 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 		if(pluginManager.isPluginEnabled("PlaceholderAPI")) {
 			Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Enabling PlaceholderAPI Hook"));
 		}
-		
+
 		new VentureChatPlaceholders().register();
-		
+
 		startRepeatingTasks();
 
 		ArrayList<? extends Player> online = new ArrayList<>(Bukkit.getOnlinePlayers());
 		if (!online.isEmpty()) {
-			//getServer().getScheduler().runTaskLaterAsynchronously(this, () -> {
-				Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Loading online players"));
-				LoginListener loginListener = new LoginListener();
-				online.forEach(p -> {
-					try {
-						loginListener.onPlayerJoin(new PlayerJoinEvent(p, (Component) null));
-					} catch (Exception ignored) {
-					}
-				});
-			//}, 5);
+            Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Loading online players"));
+            LoginListener loginListener = new LoginListener();
+            online.forEach(p -> loginListener.onPlayerJoin(new PlayerJoinEvent(p, (Component) null)));
 		}
-		
-		Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Enabled Successfully"));	
+
+		Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Enabled Successfully"));
 	}
-	
+
 	@Override
 	public void onDisable() {
 		PlayerData.savePlayerData();
@@ -173,56 +162,50 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 		Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Disabling..."));
 		Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Disabled Successfully"));
 	}
-	
+
 	private void startRepeatingTasks() {
 		BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-		scheduler.runTaskTimerAsynchronously(this, new Runnable() {
-			@Override
-			public void run() {
-				PlayerData.savePlayerData();
-				if(getConfig().getString("loglevel", "info").equals("debug")) {
-					Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Saving Player Data"));
-				}
-			}
-		}, 0L, getConfig().getInt("saveinterval") * 1200); //one minute * save interval
-		
-		scheduler.runTaskTimerAsynchronously(this, new Runnable() {
-			@Override
-			public void run() {
-				for (MineverseChatPlayer p : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
-					long currentTimeMillis = System.currentTimeMillis();
-					Iterator<MuteContainer> iterator = p.getMutes().iterator();
-					while (iterator.hasNext()) {
-						MuteContainer mute = iterator.next();
-						if(ChatChannel.isChannel(mute.getChannel())) {
-							ChatChannel channel = ChatChannel.getChannel(mute.getChannel());
-							long timemark = mute.getDuration();
-							if (timemark == 0) {
-								continue;
-							}
-							if (getConfig().getString("loglevel", "info").equals("debug")) {
-								System.out.println(currentTimeMillis + " " + timemark);
-							}
-							if (currentTimeMillis >= timemark) {
-								iterator.remove();
-								p.getPlayer().sendMessage(LocalizedMessage.UNMUTE_PLAYER_PLAYER.toString()
-										.replace("{player}", p.getName()).replace("{channel_color}", channel.getColor())
-										.replace("{channel_name}", mute.getChannel()));
-								if(channel.getBungee()) {
-									synchronize(p, true);
-								}
-							}
-						}
-					}
-				}
-				if (getConfig().getString("loglevel", "info").equals("trace")) {
-					Bukkit.getConsoleSender()
-							.sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Updating Player Mutes"));
-				}
-			}
-		}, 0L, 60L); // three second interval
+		scheduler.runTaskTimerAsynchronously(this, () -> {
+            PlayerData.savePlayerData();
+            if(getConfig().getString("loglevel", "info").equals("debug")) {
+                Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Saving Player Data"));
+            }
+        }, 0L, getConfig().getInt("saveinterval") * 1200L); //one minute * save interval
+
+		scheduler.runTaskTimerAsynchronously(this, () -> {
+            for (MineverseChatPlayer p : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
+                long currentTimeMillis = System.currentTimeMillis();
+                Iterator<MuteContainer> iterator = p.getMutes().iterator();
+                while (iterator.hasNext()) {
+                    MuteContainer mute = iterator.next();
+                    if(ChatChannel.isChannel(mute.getChannel())) {
+                        ChatChannel channel = ChatChannel.getChannel(mute.getChannel());
+                        long timemark = mute.getDuration();
+                        if (timemark == 0) {
+                            continue;
+                        }
+                        if (getConfig().getString("loglevel", "info").equals("debug")) {
+                            System.out.println(currentTimeMillis + " " + timemark);
+                        }
+                        if (currentTimeMillis >= timemark) {
+                            iterator.remove();
+                            p.getPlayer().sendMessage(LocalizedMessage.UNMUTE_PLAYER_PLAYER.toString()
+                                    .replace("{player}", p.getName()).replace("{channel_color}", channel.getColor())
+                                    .replace("{channel_name}", mute.getChannel()));
+                            if(channel.getBungee()) {
+                                synchronize(p, true);
+                            }
+                        }
+                    }
+                }
+            }
+            if (getConfig().getString("loglevel", "info").equals("trace")) {
+                Bukkit.getConsoleSender()
+                        .sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Updating Player Mutes"));
+            }
+        }, 0L, 60L); // three second interval
 	}
-	
+
 	private void registerListeners() {
 		PluginManager pluginManager = getServer().getPluginManager();
 		pluginManager.registerEvents(new Channel(), this);
@@ -234,7 +217,7 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 			ProtocolLibrary.getProtocolManager().addPacketListener(new PacketListenerLegacyChat());
 		}
 	}
-	
+
 	private boolean setupPermissions() {
 		RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
 		if(permissionProvider != null) {
@@ -250,11 +233,11 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 		}
 		return(chat != null);
 	}
-	
+
 	public static MineverseChat getInstance() {
-		return getPlugin(MineverseChat.class);	
+		return getPlugin(MineverseChat.class);
 	}
-	
+
 	public static void initializeConfigReaders() {
 		Localization.initialize();
 		Alias.initialize();
@@ -262,11 +245,11 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 		GuiSlot.initialize();
 		ChatChannel.initialize();
 	}
-	
+
 	public static Chat getVaultChat() {
 		return chat;
 	}
-	
+
 	public static Permission getVaultPermission() {
 		return permission;
 	}
@@ -279,9 +262,7 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 			out.writeUTF("Sync");
 			if(!changes) {
 				out.writeUTF("Receive");
-				// System.out.println(mcp.getPlayer().getServer().getServerName());
-				// out.writeUTF(mcp.getPlayer().getServer().getServerName());
-				out.writeUTF(mcp.getUUID().toString());
+                out.writeUTF(mcp.getUUID().toString());
 				Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(getInstance(), new Runnable() {
 					@Override
 					public void run() {
@@ -290,7 +271,7 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 						}
 						synchronize(mcp, false);
 					}
-				}, 20L); // one second delay before running again
+				}, 20L); // one-second delay before running again
 			}
 			else {
 				out.writeUTF("Update");
@@ -349,28 +330,10 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void sendPluginMessage(ByteArrayOutputStream byteOutStream) {
-		if(MineverseChatAPI.getOnlineMineverseChatPlayers().size() > 0) {
+		if(!MineverseChatAPI.getOnlineMineverseChatPlayers().isEmpty()) {
 			MineverseChatAPI.getOnlineMineverseChatPlayers().iterator().next().getPlayer().sendPluginMessage(getInstance(), PLUGIN_MESSAGING_CHANNEL, byteOutStream.toByteArray());
-		}
-	}
-	
-	public static void sendDiscordSRVPluginMessage(String chatChannel, String message) {
-		if(MineverseChatAPI.getOnlineMineverseChatPlayers().size() == 0) {
-			return;
-		}
-		ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
-		DataOutputStream out = new DataOutputStream(byteOutStream);
-		try {
-			out.writeUTF("DiscordSRV");
-			out.writeUTF(chatChannel);
-			out.writeUTF(message);
-			sendPluginMessage(byteOutStream);
-			out.close();
-		}
-		catch(Exception e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -399,23 +362,23 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 				String globalJSON = msgin.readUTF();
 				String primaryGroup = msgin.readUTF();
 				String nickname = msgin.readUTF();
-				
+
 				if(!ChatChannel.isChannel(chatchannel)) {
 					return;
 				}
 				ChatChannel chatChannelObject = ChatChannel.getChannel(chatchannel);
-				
+
 				if(!chatChannelObject.getBungee()) {
 					return;
 				}
-				
-				Set<Player> recipients = new HashSet<Player>();
+
+				Set<Player> recipients = new HashSet<>();
 				for(MineverseChatPlayer p : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
 					if(p.isListening(chatChannelObject.getName())) {
 						recipients.add(p.getPlayer());
 					}
 				}
-				
+
 				Bukkit.getServer().getScheduler().runTaskAsynchronously(this, new Runnable() {
 					@Override
 					public void run() {
@@ -425,30 +388,30 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 						Bukkit.getServer().getPluginManager().callEvent(ventureChatEvent);
 					}
 				});
-				
+
 				Bukkit.getConsoleSender().sendMessage(consoleChat);
-				
+
 				if(Database.isEnabled()) {
 					Database.writeVentureChat(senderUUID.toString(), senderName, server, chatchannel, chat.replace("'", "''"), "Chat");
 				}
-				
+
 				for(MineverseChatPlayer p : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
 					if(p.isListening(chatChannelObject.getName())) {
 						if(!p.getBungeeToggle() && MineverseChatAPI.getOnlineMineverseChatPlayer(senderName) == null) {
 							continue;
 						}
-						
+
 						String json = Format.formatModerationGUI(globalJSON, p.getPlayer(), senderName, chatchannel, hash);
 						PacketContainer packet = Format.createPacketPlayOutChat(json);
-						
+
 						if(getConfig().getBoolean("ignorechat", false)) {
 							if(!p.getIgnores().contains(senderUUID)) {
 								// System.out.println("Chat sent");
-								Format.sendPacketPlayOutChat(p.getPlayer(), packet);							
+								Format.sendPacketPlayOutChat(p.getPlayer(), packet);
 							}
 							continue;
 						}
-						Format.sendPacketPlayOutChat(p.getPlayer(), packet);	
+						Format.sendPacketPlayOutChat(p.getPlayer(), packet);
 					}
 				}
 			}
@@ -461,18 +424,18 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 				ChatChannel chatChannelObj = ChatChannel.getChannel(chatChannel);
 				if(!chatChannelObj.getBungee()) {
 					return;
-				}	
-				
+				}
+
 				String json = Format.convertPlainTextToJson(message, true);
 				int hash = (message.replaceAll("([�]([a-z0-9]))", "")).hashCode();
-				
+
 				for(MineverseChatPlayer p : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
 					if(p.isListening(chatChannelObj.getName())) {
 						String finalJSON = Format.formatModerationGUI(json, p.getPlayer(), "Discord", chatChannelObj.getName(), hash);
 						PacketContainer packet = Format.createPacketPlayOutChat(finalJSON);
 						Format.sendPacketPlayOutChat(p.getPlayer(), packet);
 					}
-				}	
+				}
 			}
 			if(subchannel.equals("PlayerNames")) {
 				MineverseChatAPI.clearNetworkPlayerNames();
@@ -589,8 +552,8 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 				if(!p.hasPlayed()) {
 					boolean isThereABungeeChannel = false;
 					for(ChatChannel ch : ChatChannel.getAutojoinList()) {
-						if((!ch.hasPermission() || p.getPlayer().hasPermission(ch.getPermission())) && !p.isListening(ch.getName())) {	
-							p.addListening(ch.getName());	
+						if((!ch.hasPermission() || p.getPlayer().hasPermission(ch.getPermission())) && !p.isListening(ch.getName())) {
+							p.addListening(ch.getName());
 							if(ch.getBungee()) {
 								isThereABungeeChannel = true;
 							}
@@ -649,7 +612,7 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 					String receiverName = msgin.readUTF();
 					UUID sender = UUID.fromString(msgin.readUTF());
 					MineverseChatPlayer p = MineverseChatAPI.getOnlineMineverseChatPlayer(sender);
-					
+
 					if(p.getIgnores().contains(receiver)) {
 						p.getPlayer().sendMessage(LocalizedMessage.IGNORE_PLAYER_OFF.toString()
 								.replace("{player}", receiverName));
@@ -657,7 +620,7 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 						synchronize(p, true);
 						return;
 					}
-					
+
 					p.addIgnore(receiver);
 					p.getPlayer().sendMessage(LocalizedMessage.IGNORE_PLAYER_ON.toString()
 							.replace("{player}", receiverName));
@@ -1095,7 +1058,7 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 					String receiver = msgin.readUTF();
 					UUID sender = UUID.fromString(msgin.readUTF());
 					MineverseChatPlayer p = MineverseChatAPI.getOnlineMineverseChatPlayer(sender);
-					if(message.length()>0) {
+					if(!message.isEmpty()) {
 						p.getPlayer().sendMessage(message.replace("{player}", receiver));
 					}
 				}

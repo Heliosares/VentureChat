@@ -16,7 +16,7 @@ import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 import mineverse.Aust1n46.chat.utilities.Format;
 
 public class Reply extends Command {
-	private MineverseChat plugin = MineverseChat.getInstance();
+	private final MineverseChat plugin = MineverseChat.getInstance();
 
 	public Reply() {
 		super("reply");

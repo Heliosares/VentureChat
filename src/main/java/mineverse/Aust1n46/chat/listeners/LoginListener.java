@@ -24,7 +24,7 @@ import mineverse.Aust1n46.chat.utilities.UUIDFetcher;
  * @author Aust1n46
  */
 public class LoginListener implements Listener {
-	private MineverseChat plugin = MineverseChat.getInstance();
+	private final MineverseChat plugin = MineverseChat.getInstance();
 
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerQuit(PlayerQuitEvent playerQuitEvent) {
@@ -43,7 +43,7 @@ public class LoginListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
-	public void onPlayerJoin(PlayerJoinEvent event) throws Exception {
+	public void onPlayerJoin(PlayerJoinEvent event) {
 		MineverseChatPlayer mcp = MineverseChatAPI.getMineverseChatPlayer(event.getPlayer());
 		Player player = event.getPlayer();
 		String name = player.getName();

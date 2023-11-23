@@ -21,7 +21,7 @@ public class Forceall extends Command {
 			}
 			String forcemsg = "";
 			for (int x = 0; x < args.length; x++) {
-				if (args[x].length() > 0) {
+				if (!args[x].isEmpty()) {
 					forcemsg += args[x] + " ";
 				}
 			}

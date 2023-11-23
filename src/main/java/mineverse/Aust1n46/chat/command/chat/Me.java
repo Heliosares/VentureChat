@@ -19,7 +19,7 @@ public class Me extends Command {
 			if (args.length > 0) {
 				String msg = "";
 				for (int x = 0; x < args.length; x++)
-					if (args[x].length() > 0)
+					if (!args[x].isEmpty())
 						msg += " " + args[x];
 				if (sender instanceof Player && MineverseChatAPI.getOnlineMineverseChatPlayer((Player) sender).hasFilter()) {
 					msg = Format.FilterChat(msg);

@@ -29,15 +29,11 @@ import mineverse.Aust1n46.chat.utilities.Format;
 import mineverse.Aust1n46.chat.versions.VersionHandler;
 
 public class CommandListener implements Listener {
-	private MineverseChat plugin = MineverseChat.getInstance();
+	private final MineverseChat plugin = MineverseChat.getInstance();
 
 	@EventHandler
-	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) throws FileNotFoundException {
-		if (event.getPlayer() == null) {
-			Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&c - Event.getPlayer() returned null in PlayerCommandPreprocessEvent"));
-			return;
-		}
-		ConfigurationSection cs = plugin.getConfig().getConfigurationSection("commandspy");
+	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+        ConfigurationSection cs = plugin.getConfig().getConfigurationSection("commandspy");
 		Boolean wec = cs.getBoolean("worldeditcommands", true);
 		MineverseChatPlayer mcp = MineverseChatAPI.getOnlineMineverseChatPlayer(event.getPlayer());
 		if (!mcp.getPlayer().hasPermission("venturechat.commandspy.override")) {
@@ -83,7 +79,7 @@ public class CommandListener implements Listener {
 					if (message.length() < a.getName().length() + 2 || a.getArguments() == 0)
 						num = 0;
 					int arg = 0;
-					if (message.substring(a.getName().length() + 1 + num).length() == 0)
+					if (message.substring(a.getName().length() + 1 + num).isEmpty())
 						arg = 1;
 					String[] args = message.substring(a.getName().length() + 1 + num).split(" ");
 					String send = "";
@@ -98,7 +94,7 @@ public class CommandListener implements Listener {
 					for (int b = 0; b < args.length; b++) {
 						send += " " + args[b];
 					}
-					if (send.length() > 0)
+					if (!send.isEmpty())
 						send = send.substring(1);
 					s = Format.FormatStringAll(s);
 					if (mcp.getPlayer().hasPermission("venturechat.color.legacy")) {

@@ -90,7 +90,7 @@ public class VentureChatBungee extends Plugin implements Listener, VentureChatPr
 			}
 			
 			for(String send : getProxy().getServers().keySet()) {
-				if(getProxy().getServers().get(send).getPlayers().size() > 0) {
+				if(!getProxy().getServers().get(send).getPlayers().isEmpty()) {
 					getProxy().getServers().get(send).sendData(VentureChatProxy.PLUGIN_MESSAGING_CHANNEL_STRING, outstream.toByteArray());
 				}
 			}

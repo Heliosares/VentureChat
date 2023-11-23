@@ -26,7 +26,7 @@ public class Force extends Command {
 			}
 			String forcemsg = "";
 			for (int x = 1; x < args.length; x++)
-				if (args[x].length() > 0)
+				if (!args[x].isEmpty())
 					forcemsg += args[x] + " ";
 			sender.sendMessage(LocalizedMessage.FORCE_PLAYER.toString().replace("{player}", player.getName()).replace("{message}", forcemsg));
 			player.getPlayer().chat(forcemsg);

@@ -23,7 +23,7 @@ public class ChatChannel {
 	private static final String PERMISSION_PREFIX = "venturechat.";
 	private static final String NO_PERMISSIONS = "venturechat.none";
 
-	private static MineverseChat plugin = MineverseChat.getInstance();
+	private static final MineverseChat plugin = MineverseChat.getInstance();
 	private static ChatChannel defaultChatChannel;
 	private static String defaultColor;
 	private static HashMap<String, ChatChannel> chatChannels;
@@ -31,20 +31,20 @@ public class ChatChannel {
 	@Deprecated
 	private static ChatChannel[] channels;
 
-	private String name;
-	private String permission;
-	private String speakPermission;
-	private boolean mutable;
-	private String color;
-	private String chatColor;
-	private boolean defaultChannel;
-	private boolean autojoin;
-	private String alias;
-	private double distance;
-	private boolean filter;
-	private boolean bungee;
-	private String format;
-	private int cooldown;
+	private final String name;
+	private final String permission;
+	private final String speakPermission;
+	private final boolean mutable;
+	private final String color;
+	private final String chatColor;
+	private final boolean defaultChannel;
+	private final boolean autojoin;
+	private final String alias;
+	private final double distance;
+	private final boolean filter;
+	private final boolean bungee;
+	private final String format;
+	private final int cooldown;
 	private String prefix;
 
 	/**

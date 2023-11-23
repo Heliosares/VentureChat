@@ -8,13 +8,13 @@ import org.bukkit.configuration.ConfigurationSection;
 import mineverse.Aust1n46.chat.MineverseChat;
 
 public class Alias {
-    private static MineverseChat plugin = MineverseChat.getInstance();
+    private static final MineverseChat plugin = MineverseChat.getInstance();
     private static List<Alias> aliases;
 
-    private String name;
-    private int arguments;
-    private List<String> components;
-    private String permission;
+    private final String name;
+    private final int arguments;
+    private final List<String> components;
+    private final String permission;
 
     public Alias(String name, int arguments, List<String> components, String permission) {
         this.name = name;

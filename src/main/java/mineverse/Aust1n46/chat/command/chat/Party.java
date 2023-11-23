@@ -13,7 +13,7 @@ import mineverse.Aust1n46.chat.api.MineverseChatPlayer;
 import mineverse.Aust1n46.chat.utilities.Format;
 
 public class Party extends Command {
-	private MineverseChat plugin = MineverseChat.getInstance();
+	private final MineverseChat plugin = MineverseChat.getInstance();
 
 	public Party() {
 		super("party");
@@ -270,14 +270,14 @@ public class Party extends Command {
 				break;
 			}
 			}
-			if (args[0].length() > 0) {
+			if (!args[0].isEmpty()) {
 				if (!args[0].equals("host") && !args[0].equals("join") && !args[0].equals("leave") && !args[0].equals("kick") && !args[0].equals("info") && !args[0].equals("chat")
 						&& !args[0].equals("help") && !args[0].equals("members") && !args[0].equals("ban") && !args[0].equals("unban")) {
 					if (mcp.hasParty()) {
 						String msg = "";
 						String partyformat = "";
 						for (int x = 0; x < args.length; x++) {
-							if (args[x].length() > 0)
+							if (!args[x].isEmpty())
 								msg += " " + args[x];
 						}
 						if (mcp.hasFilter()) {

@@ -13,7 +13,7 @@ import org.bukkit.event.HandlerList;
 public class ChannelJoinEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled;
-    private Player player;
+    private final Player player;
     private ChatChannel channel;
     private String message;
 

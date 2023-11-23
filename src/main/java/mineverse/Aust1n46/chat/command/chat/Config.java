@@ -11,7 +11,7 @@ import mineverse.Aust1n46.chat.MineverseChat;
 import mineverse.Aust1n46.chat.utilities.Format;
 
 public class Config extends Command {
-	private MineverseChat plugin = MineverseChat.getInstance();
+	private final MineverseChat plugin = MineverseChat.getInstance();
 
 	public Config() {
 		super("config");
@@ -31,7 +31,7 @@ public class Config extends Command {
 									plugin.reloadConfig();
 									List<String> filters = plugin.getConfig().getStringList("filters");
 									sender.sendMessage(ChatColor.RED + "List of filters page: " + args[2]);
-									for (int a = 0 + (Integer.parseInt(args[2]) - 1) * 97; a <= Integer.parseInt(args[2]) * 97; a++) {
+									for (int a = (Integer.parseInt(args[2]) - 1) * 97; a <= Integer.parseInt(args[2]) * 97; a++) {
 										if (a >= filters.size()) {
 											break;
 										}
@@ -99,7 +99,7 @@ public class Config extends Command {
 									plugin.reloadConfig();
 									List<String> blockablecommands = plugin.getConfig().getStringList("blockablecommands");
 									sender.sendMessage(ChatColor.RED + "List of blockablecommands page: " + args[2]);
-									for (int a = 0 + (Integer.parseInt(args[2]) - 1) * 97; a <= Integer.parseInt(args[2]) * 97; a++) {
+									for (int a = (Integer.parseInt(args[2]) - 1) * 97; a <= Integer.parseInt(args[2]) * 97; a++) {
 										if (a >= blockablecommands.size()) {
 											break;
 										}
@@ -541,7 +541,7 @@ public class Config extends Command {
 					try {
 						String format = args[1] + " ";
 						for (int x = 2; x < args.length; x++) {
-							if (args[x].length() > 0)
+							if (!args[x].isEmpty())
 								format += args[x] + " ";
 						}
 						format = format.substring(0, format.length() - 1);
@@ -561,7 +561,7 @@ public class Config extends Command {
 					try {
 						String format = args[1] + " ";
 						for (int x = 2; x < args.length; x++) {
-							if (args[x].length() > 0)
+							if (!args[x].isEmpty())
 								format += args[x] + " ";
 						}
 						format = format.substring(0, format.length() - 1);
@@ -581,7 +581,7 @@ public class Config extends Command {
 					try {
 						String format = args[1] + " ";
 						for (int x = 2; x < args.length; x++) {
-							if (args[x].length() > 0)
+							if (!args[x].isEmpty())
 								format += args[x] + " ";
 						}
 						format = format.substring(0, format.length() - 1);
@@ -601,7 +601,7 @@ public class Config extends Command {
 					try {
 						String format = args[1] + " ";
 						for (int x = 2; x < args.length; x++) {
-							if (args[x].length() > 0)
+							if (!args[x].isEmpty())
 								format += args[x] + " ";
 						}
 						format = format.substring(0, format.length() - 1);
@@ -621,7 +621,7 @@ public class Config extends Command {
 					try {
 						String format = args[1] + " ";
 						for (int x = 2; x < args.length; x++) {
-							if (args[x].length() > 0)
+							if (!args[x].isEmpty())
 								format += args[x] + " ";
 						}
 						format = format.substring(0, format.length() - 1);
@@ -641,7 +641,7 @@ public class Config extends Command {
 					try {
 						String format = args[1] + " ";
 						for (int x = 2; x < args.length; x++) {
-							if (args[x].length() > 0)
+							if (!args[x].isEmpty())
 								format += args[x] + " ";
 						}
 						format = format.substring(0, format.length() - 1);
@@ -661,7 +661,7 @@ public class Config extends Command {
 					try {
 						String format = args[1] + " ";
 						for (int x = 2; x < args.length; x++) {
-							if (args[x].length() > 0)
+							if (!args[x].isEmpty())
 								format += args[x] + " ";
 						}
 						format = format.substring(0, format.length() - 1);
@@ -1067,7 +1067,7 @@ public class Config extends Command {
 									try {
 										String format = args[3] + " ";
 										for (int x = 4; x < args.length; x++) {
-											if (args[x].length() > 0)
+											if (!args[x].isEmpty())
 												format += args[x] + " ";
 										}
 										format = format.substring(0, format.length() - 1);

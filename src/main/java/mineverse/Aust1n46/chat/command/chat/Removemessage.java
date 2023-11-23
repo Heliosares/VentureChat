@@ -25,9 +25,9 @@ import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 import mineverse.Aust1n46.chat.utilities.Format;
 
 public class Removemessage extends Command {
-	private MineverseChat plugin = MineverseChat.getInstance();
-	private PacketContainer emptyLinePacketContainer = Format.createPacketPlayOutChat("{\"extra\":[\" \"],\"text\":\"\"}");
-	private WrappedChatComponent messageDeletedComponentPlayer = WrappedChatComponent.fromJson(
+	private final MineverseChat plugin = MineverseChat.getInstance();
+	private final PacketContainer emptyLinePacketContainer = Format.createPacketPlayOutChat("{\"extra\":[\" \"],\"text\":\"\"}");
+	private final WrappedChatComponent messageDeletedComponentPlayer = WrappedChatComponent.fromJson(
 			"{\"text\":\"\",\"extra\":[{\"text\":\"\",\"extra\":[" + Format.convertToJsonColors(Format.FormatStringAll(plugin.getConfig().getString("messageremovertext")))
 					+ "],\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":["
 					+ Format.convertToJsonColors(Format.FormatStringAll(plugin.getConfig().getString("messageremoverpermissions"))) + "]}}}]}");

@@ -333,7 +333,7 @@ public class Format {
 				}
 				if (!color.equals("f"))
 					color = previousColor;
-				if (color.length() == 0)
+				if (color.isEmpty())
 					color = "f";
 			} else {
 				bold = false;
@@ -592,7 +592,7 @@ public class Format {
 			ArrayList<?> list = (ArrayList<?>) c.getMethod("a").invoke(o, new Object[0]);
 			for (Object component : list) {
 				ArrayList<?> innerList = (ArrayList<?>) c.getMethod("a").invoke(component, new Object[0]);
-				if (innerList.size() > 0) {
+				if (!innerList.isEmpty()) {
 					splitComponents(finalList, component, c);
 				} else {
 					finalList.add(component);
@@ -602,7 +602,7 @@ public class Format {
 			ArrayList<?> list = (ArrayList<?>) c.getMethod("getSiblings").invoke(o, new Object[0]);
 			for (Object component : list) {
 				ArrayList<?> innerList = (ArrayList<?>) c.getMethod("getSiblings").invoke(component, new Object[0]);
-				if (innerList.size() > 0) {
+				if (!innerList.isEmpty()) {
 					splitComponents(finalList, component, c);
 				} else {
 					finalList.add(component);
@@ -613,7 +613,7 @@ public class Format {
 			ArrayList<?> list = (ArrayList<?>) c.getMethod("b").invoke(o, new Object[0]);
 			for (Object component : list) {
 				ArrayList<?> innerList = (ArrayList<?>) c.getMethod("b").invoke(component, new Object[0]);
-				if (innerList.size() > 0) {
+				if (!innerList.isEmpty()) {
 					splitComponents(finalList, component, c);
 				} else {
 					finalList.add(component);
@@ -838,7 +838,7 @@ public class Format {
 	public static long parseTimeStringToMillis(String timeInput) {
 		long millis = 0L;
 		timeInput = timeInput.toLowerCase();
-		char validChars[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'd', 'h', 'm', 's' };
+		char[] validChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'd', 'h', 'm', 's' };
 		if(containsInvalidChars(validChars, timeInput)) {
 			return -1;
 		}
@@ -876,7 +876,7 @@ public class Format {
 			timeInput = timeInput.substring(indexOfDayToken + 1);
 			millis += MILLISECONDS_PER_DAY * numberOfDays;
 		}
-		if(timeInput.length() > 0) {
+		if(!timeInput.isEmpty()) {
 			indexOfHourToken = timeInput.indexOf("h");
 			if(indexOfHourToken != -1) {
 				int numberOfHours = Integer.parseInt(timeInput.substring(0, indexOfHourToken));
@@ -884,7 +884,7 @@ public class Format {
 				millis += MILLISECONDS_PER_HOUR * numberOfHours;
 			}
 		}
-		if(timeInput.length() > 0) {
+		if(!timeInput.isEmpty()) {
 			indexOfMinuteToken = timeInput.indexOf("m");
 			if(indexOfMinuteToken != -1) {
 				int numberOfMinutes = Integer.parseInt(timeInput.substring(0, indexOfMinuteToken));
@@ -892,7 +892,7 @@ public class Format {
 				millis += MILLISECONDS_PER_MINUTE * numberOfMinutes;
 			}
 		}
-		if(timeInput.length() > 0) {
+		if(!timeInput.isEmpty()) {
 			indexOfSecondToken = timeInput.indexOf("s");
 			if(indexOfSecondToken != -1) {
 				int numberOfSeconds = Integer.parseInt(timeInput.substring(0, indexOfSecondToken));

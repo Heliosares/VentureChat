@@ -11,7 +11,7 @@ import mineverse.Aust1n46.chat.channel.ChatChannel;
 import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 
 public class ChannelAlias extends Command {
-	private MineverseChat plugin = MineverseChat.getInstance();
+	private final MineverseChat plugin = MineverseChat.getInstance();
 
 	public ChannelAlias() {
 		super("channelalias");
@@ -55,7 +55,7 @@ public class ChannelAlias extends Command {
 					}
 					String msg = "";
 					for (int x = 0; x < args.length; x++) {
-						if (args[x].length() > 0)
+						if (!args[x].isEmpty())
 							msg += " " + args[x];
 					}
 					mcp.getPlayer().chat(msg);

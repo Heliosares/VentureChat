@@ -26,7 +26,6 @@ public class FormatTest {
 	private static MockedStatic<MineverseChat> mockedMineverseChat;
 
 	private static MineverseChat mockPlugin;
-	private FileConfiguration mockConfig;
 
 	private List<String> filters;
 
@@ -47,7 +46,7 @@ public class FormatTest {
 		filters = new ArrayList<String>();
 		filters.add("ass,donut");
 
-		mockConfig = Mockito.mock(FileConfiguration.class);
+		FileConfiguration mockConfig = Mockito.mock(FileConfiguration.class);
 		Mockito.when(mockPlugin.getConfig()).thenReturn(mockConfig);
 		Mockito.when(mockConfig.getStringList("filters")).thenReturn(filters);
 	}

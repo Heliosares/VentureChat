@@ -23,7 +23,7 @@ public class Ignore extends Command {
 		super("ignore");
 	}
 
-	private MineverseChat plugin = MineverseChat.getInstance();
+	private final MineverseChat plugin = MineverseChat.getInstance();
 
 	@Override
 	public boolean execute(CommandSender sender, String command, String[] args) {
@@ -47,7 +47,7 @@ public class Ignore extends Command {
 				ignoreList += ChatColor.RED + iName + ChatColor.WHITE + ", ";
 			}
 			mcp.getPlayer().sendMessage(LocalizedMessage.IGNORE_LIST_HEADER.toString());
-			if (ignoreList.length() > 0) {
+			if (!ignoreList.isEmpty()) {
 				mcp.getPlayer().sendMessage(ignoreList.substring(0, ignoreList.length() - 2));
 			}
 			return true;

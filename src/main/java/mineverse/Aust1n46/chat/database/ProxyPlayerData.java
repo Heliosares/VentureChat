@@ -153,9 +153,9 @@ public class ProxyPlayerData {
                 String ignore = "";
                 for (UUID s : p.getIgnores())
                     ignore += s.toString() + ",";
-                if (listen.length() > 0)
+                if (!listen.isEmpty())
                     listen = listen.substring(0, listen.length() - 1);
-                if (ignore.length() > 0)
+                if (!ignore.isEmpty())
                     ignore = ignore.substring(0, ignore.length() - 1);
                 proxyPlayerDataFileConfiguration.set("channels", listen);
                 Configuration muteSection = createSection(proxyPlayerDataFileConfiguration, "mutes");

@@ -11,7 +11,7 @@ import mineverse.Aust1n46.chat.api.MineverseChatPlayer;
 import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 
 public class Commandblock extends Command {
-	private MineverseChat plugin = MineverseChat.getInstance();
+	private final MineverseChat plugin = MineverseChat.getInstance();
 
 	public Commandblock() {
 		super("commandblock");
@@ -27,7 +27,7 @@ public class Commandblock extends Command {
 					return true;
 				}
 				boolean match = false;
-				for (String cb : (List<String>) plugin.getConfig().getStringList("blockablecommands"))
+				for (String cb : plugin.getConfig().getStringList("blockablecommands"))
 					if (args[1].equals("/" + cb))
 						match = true;
 				if (match || player.isBlockedCommand(args[1])) {

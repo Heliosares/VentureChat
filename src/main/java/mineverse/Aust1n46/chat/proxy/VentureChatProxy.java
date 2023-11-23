@@ -533,9 +533,7 @@ public class VentureChatProxy {
 						out.writeLong(muteContainer.getDuration());
 						out.writeUTF(muteContainer.getReason());
 					}
-					//System.out.println(smcp.isSpy() + " spy value");
-					//System.out.println(out.size() + " size before");
-					out.writeBoolean(smcp.isSpy());
+                    out.writeBoolean(smcp.isSpy());
 					out.writeBoolean(smcp.getMessageToggle());
 					//System.out.println(out.size() + " size after");
 					int ignoreCount = smcp.getIgnores().size();

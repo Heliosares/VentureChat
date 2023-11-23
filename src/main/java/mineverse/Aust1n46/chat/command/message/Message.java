@@ -24,7 +24,7 @@ public class Message extends Command {
 		super("message");
 	}
 
-	private MineverseChat plugin = MineverseChat.getInstance();
+	private final MineverseChat plugin = MineverseChat.getInstance();
 
 	@Override
 	public boolean execute(CommandSender sender, String command, String[] args) {
@@ -67,7 +67,7 @@ public class Message extends Command {
 			String echo = "";
 			String send = "";
 			String spy = "";
-			if (args[1].length() > 0) {
+			if (!args[1].isEmpty()) {
 				for (int r = 1; r < args.length; r++) {
 					msg += " " + args[r];
 				}
@@ -120,7 +120,7 @@ public class Message extends Command {
 			}
 		}
 		if (args.length == 1) {
-			if (args[0].length() > 0) {
+			if (!args[0].isEmpty()) {
 				if (!mcp.hasConversation() || (mcp.hasConversation() && !mcp.getConversation().toString().equals(player.getUUID().toString()))) {
 					mcp.setConversation(player.getUUID());
 					if (!mcp.getPlayer().hasPermission("venturechat.spy.override")) {

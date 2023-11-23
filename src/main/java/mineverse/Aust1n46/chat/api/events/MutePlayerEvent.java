@@ -11,7 +11,7 @@ import org.bukkit.event.HandlerList;
 public class MutePlayerEvent extends Event implements Cancellable {	//unimplemented
 	private static final HandlerList handlers = new HandlerList();
 	private boolean cancelled;
-	private Player player;
+	private final Player player;
 	private ChatChannel channel;
 	private int time;
 	

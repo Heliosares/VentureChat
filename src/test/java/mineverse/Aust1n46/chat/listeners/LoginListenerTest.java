@@ -31,18 +31,16 @@ public class LoginListenerTest {
 	private static MineverseChat mockPlugin;
 	private Player mockPlayer;
 	private MineverseChatPlayer mockMCP;
-	private ConsoleCommandSender mockConsoleSender;
 	private LoginListener testLoginListener;
 	private PlayerQuitEvent mockPlayerQuitEvent;
-	private static File mockDataFile;
-	
+
 	@BeforeClass
 	public static void init() {
 		mockedMineverseChat = Mockito.mockStatic(MineverseChat.class);
 		mockPlugin = Mockito.mock(MineverseChat.class);
 		Mockito.when(MineverseChat.getInstance()).thenReturn(mockPlugin);
 		mockedBukkit = Mockito.mockStatic(Bukkit.class);
-		mockDataFile = Mockito.mock(File.class);
+		File mockDataFile = Mockito.mock(File.class);
 		Mockito.when(mockPlugin.getDataFolder()).thenReturn(mockDataFile);
 		Mockito.when(mockDataFile.getAbsolutePath()).thenReturn("");
 		mockedPlayerData = Mockito.mockStatic(PlayerData.class);
@@ -61,7 +59,7 @@ public class LoginListenerTest {
 	public void setUp() {
 		mockPlayer = Mockito.mock(Player.class);
 		mockMCP = Mockito.mock(MineverseChatPlayer.class);
-		mockConsoleSender = Mockito.mock(ConsoleCommandSender.class);
+		ConsoleCommandSender mockConsoleSender = Mockito.mock(ConsoleCommandSender.class);
 		mockPlayerQuitEvent = Mockito.mock(PlayerQuitEvent.class);
 		Mockito.when(mockPlayerQuitEvent.getPlayer()).thenReturn(mockPlayer);
 		Mockito.when(MineverseChatAPI.getMineverseChatPlayer(Mockito.any(Player.class))).thenReturn(mockMCP);

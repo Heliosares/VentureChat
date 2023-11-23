@@ -32,7 +32,7 @@ public class VentureChatEvent extends Event {
 	private final boolean bungee;
 	
 	public VentureChatEvent(MineverseChatPlayer mcp, String username, String nickname, String playerPrimaryGroup, ChatChannel channel, Set<Player> recipients, int recipientCount, String format, String chat, String globalJSON, int hash, boolean bungee) {
-		super(MineverseChat.ASYNC);
+		super(true);
 		this.mcp = mcp;
 		this.username = username;
 		this.nickname = nickname;

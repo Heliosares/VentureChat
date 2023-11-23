@@ -10,7 +10,7 @@ import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 import mineverse.Aust1n46.chat.utilities.Format;
 
 public class Broadcast extends Command {
-	private MineverseChat plugin = MineverseChat.getInstance();
+	private final MineverseChat plugin = MineverseChat.getInstance();
 
 	public Broadcast() {
 		super("broadcast");
@@ -26,7 +26,7 @@ public class Broadcast extends Command {
 			if (args.length > 0) {
 				String bc = "";
 				for (int x = 0; x < args.length; x++) {
-					if (args[x].length() > 0)
+					if (!args[x].isEmpty())
 						bc += args[x] + " ";
 				}
 				bc = Format.FormatStringAll(bc);

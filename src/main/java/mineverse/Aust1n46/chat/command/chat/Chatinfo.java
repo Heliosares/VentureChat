@@ -28,54 +28,52 @@ public class Chatinfo extends Command {
 				String listen = "";
 				String mute = "";
 				String blockedcommands = "";
-				if (args.length < 1) {
-					mcp.getPlayer().sendMessage(ChatColor.GOLD + "Player: " + ChatColor.GREEN + mcp.getName());
-					for (String c : mcp.getListening()) {
-						ChatChannel channel = ChatChannel.getChannel(c);
-						listen += channel.getColor() + channel.getName() + " ";
-					}
-					for (MuteContainer muteContainer : mcp.getMutes()) {
-						ChatChannel channel = ChatChannel.getChannel(muteContainer.getChannel());
-						mute += channel.getColor() + channel.getName() + " ";
-					}
-					for (String bc : mcp.getBlockedCommands()) {
-						blockedcommands += bc + " ";
-					}
-					mcp.getPlayer().sendMessage(ChatColor.GOLD + "Listening: " + listen);
-					if (mute.length() > 0) {
-						mcp.getPlayer().sendMessage(ChatColor.GOLD + "Mutes: " + mute);
-					} else {
-						mcp.getPlayer().sendMessage(ChatColor.GOLD + "Mutes: " + ChatColor.RED + "N/A");
-					}
-					if (blockedcommands.length() > 0) {
-						mcp.getPlayer().sendMessage(ChatColor.GOLD + "Blocked Commands: " + ChatColor.RED + blockedcommands);
-					} else {
-						mcp.getPlayer().sendMessage(ChatColor.GOLD + "Blocked Commands: " + ChatColor.RED + "N/A");
-					}
-					if (mcp.hasConversation()) {
-						mcp.getPlayer().sendMessage(
-								ChatColor.GOLD + "Private conversation: " + ChatColor.GREEN + MineverseChatAPI.getMineverseChatPlayer(mcp.getConversation()).getName());
-					} else {
-						mcp.getPlayer().sendMessage(ChatColor.GOLD + "Private conversation: " + ChatColor.RED + "N/A");
-					}
-					if (mcp.isSpy()) {
-						mcp.getPlayer().sendMessage(ChatColor.GOLD + "Spy: " + ChatColor.GREEN + "true");
-					} else {
-						mcp.getPlayer().sendMessage(ChatColor.GOLD + "Spy: " + ChatColor.RED + "false");
-					}
-					if (mcp.hasCommandSpy()) {
-						mcp.getPlayer().sendMessage(ChatColor.GOLD + "Command spy: " + ChatColor.GREEN + "true");
-					} else {
-						mcp.getPlayer().sendMessage(ChatColor.GOLD + "Command spy: " + ChatColor.RED + "false");
-					}
-					if (mcp.hasFilter()) {
-						mcp.getPlayer().sendMessage(ChatColor.GOLD + "Filter: " + ChatColor.GREEN + "true");
-					} else {
-						mcp.getPlayer().sendMessage(ChatColor.GOLD + "Filter: " + ChatColor.RED + "false");
-					}
-					return true;
-				}
-			}
+                mcp.getPlayer().sendMessage(ChatColor.GOLD + "Player: " + ChatColor.GREEN + mcp.getName());
+                for (String c : mcp.getListening()) {
+                    ChatChannel channel = ChatChannel.getChannel(c);
+                    listen += channel.getColor() + channel.getName() + " ";
+                }
+                for (MuteContainer muteContainer : mcp.getMutes()) {
+                    ChatChannel channel = ChatChannel.getChannel(muteContainer.getChannel());
+                    mute += channel.getColor() + channel.getName() + " ";
+                }
+                for (String bc : mcp.getBlockedCommands()) {
+                    blockedcommands += bc + " ";
+                }
+                mcp.getPlayer().sendMessage(ChatColor.GOLD + "Listening: " + listen);
+                if (!mute.isEmpty()) {
+                    mcp.getPlayer().sendMessage(ChatColor.GOLD + "Mutes: " + mute);
+                } else {
+                    mcp.getPlayer().sendMessage(ChatColor.GOLD + "Mutes: " + ChatColor.RED + "N/A");
+                }
+                if (!blockedcommands.isEmpty()) {
+                    mcp.getPlayer().sendMessage(ChatColor.GOLD + "Blocked Commands: " + ChatColor.RED + blockedcommands);
+                } else {
+                    mcp.getPlayer().sendMessage(ChatColor.GOLD + "Blocked Commands: " + ChatColor.RED + "N/A");
+                }
+                if (mcp.hasConversation()) {
+                    mcp.getPlayer().sendMessage(
+                            ChatColor.GOLD + "Private conversation: " + ChatColor.GREEN + MineverseChatAPI.getMineverseChatPlayer(mcp.getConversation()).getName());
+                } else {
+                    mcp.getPlayer().sendMessage(ChatColor.GOLD + "Private conversation: " + ChatColor.RED + "N/A");
+                }
+                if (mcp.isSpy()) {
+                    mcp.getPlayer().sendMessage(ChatColor.GOLD + "Spy: " + ChatColor.GREEN + "true");
+                } else {
+                    mcp.getPlayer().sendMessage(ChatColor.GOLD + "Spy: " + ChatColor.RED + "false");
+                }
+                if (mcp.hasCommandSpy()) {
+                    mcp.getPlayer().sendMessage(ChatColor.GOLD + "Command spy: " + ChatColor.GREEN + "true");
+                } else {
+                    mcp.getPlayer().sendMessage(ChatColor.GOLD + "Command spy: " + ChatColor.RED + "false");
+                }
+                if (mcp.hasFilter()) {
+                    mcp.getPlayer().sendMessage(ChatColor.GOLD + "Filter: " + ChatColor.GREEN + "true");
+                } else {
+                    mcp.getPlayer().sendMessage(ChatColor.GOLD + "Filter: " + ChatColor.RED + "false");
+                }
+                return true;
+            }
 			if (sender.hasPermission("venturechat.chatinfo.others")) {
 				String listen = "";
 				String mute = "";
@@ -98,12 +96,12 @@ public class Chatinfo extends Command {
 					blockedcommands += bc + " ";
 				}
 				sender.sendMessage(ChatColor.GOLD + "Listening: " + listen);
-				if (mute.length() > 0) {
+				if (!mute.isEmpty()) {
 					sender.sendMessage(ChatColor.GOLD + "Mutes: " + mute);
 				} else {
 					sender.sendMessage(ChatColor.GOLD + "Mutes: " + ChatColor.RED + "N/A");
 				}
-				if (blockedcommands.length() > 0) {
+				if (!blockedcommands.isEmpty()) {
 					sender.sendMessage(ChatColor.GOLD + "Blocked Commands: " + ChatColor.RED + blockedcommands);
 				} else {
 					sender.sendMessage(ChatColor.GOLD + "Blocked Commands: " + ChatColor.RED + "N/A");

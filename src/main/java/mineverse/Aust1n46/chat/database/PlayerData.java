@@ -32,7 +32,7 @@ import mineverse.Aust1n46.chat.utilities.UUIDFetcher;
  * @author Aust1n46
  */
 public class PlayerData {
-    private static MineverseChat plugin = MineverseChat.getInstance();
+    private static final MineverseChat plugin = MineverseChat.getInstance();
     private static final String PLAYER_DATA_DIRECTORY_PATH = plugin.getDataFolder().getAbsolutePath() + "/PlayerData";
 
     public static void loadLegacyPlayerData() {
@@ -85,7 +85,7 @@ public class PlayerData {
                     blockedCommands.add(b.nextToken());
                 }
                 boolean host = playerData.getConfigurationSection("players." + uuidString).getBoolean("host");
-                UUID party = playerData.getConfigurationSection("players." + uuidString).getString("party").length() > 0 ? UUID.fromString(playerData.getConfigurationSection("players." + uuidString).getString("party")) : null;
+                UUID party = !playerData.getConfigurationSection("players." + uuidString).getString("party").isEmpty() ? UUID.fromString(playerData.getConfigurationSection("players." + uuidString).getString("party")) : null;
                 boolean filter = playerData.getConfigurationSection("players." + uuidString).getBoolean("filter");
                 boolean notifications = playerData.getConfigurationSection("players." + uuidString).getBoolean("notifications");
                 String jsonFormat = "Default";
@@ -173,7 +173,7 @@ public class PlayerData {
                 blockedCommands.add(b.nextToken());
             }
             boolean host = playerDataFileYamlConfiguration.getBoolean("host");
-            UUID party = playerDataFileYamlConfiguration.getString("party").length() > 0 ? UUID.fromString(playerDataFileYamlConfiguration.getString("party")) : null;
+            UUID party = !playerDataFileYamlConfiguration.getString("party").isEmpty() ? UUID.fromString(playerDataFileYamlConfiguration.getString("party")) : null;
             boolean filter = playerDataFileYamlConfiguration.getBoolean("filter");
             boolean notifications = playerDataFileYamlConfiguration.getBoolean("notifications");
             String jsonFormat = "Default";
@@ -222,7 +222,7 @@ public class PlayerData {
             for (String s : mcp.getBlockedCommands()) {
                 blockedCommands += s + ",";
             }
-            if (listening.length() > 0) {
+            if (!listening.isEmpty()) {
                 listening = listening.substring(0, listening.length() - 1);
             }
             playerDataFileYamlConfiguration.set("listen", listening);
