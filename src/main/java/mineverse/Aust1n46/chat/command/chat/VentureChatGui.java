@@ -19,6 +19,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class VentureChatGui extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String command, String[] args) {
+    public boolean execute(@NotNull CommandSender sender, @NotNull String command, String[] args) {
         if (!(sender instanceof Player)) {
             Bukkit.getServer().getConsoleSender().sendMessage(LocalizedMessage.COMMAND_MUST_BE_RUN_BY_PLAYER.toString());
             return true;
@@ -73,8 +74,8 @@ public class VentureChatGui extends Command {
     @SuppressWarnings("deprecation")
     private void openInventory(MineverseChatPlayer mcp, MineverseChatPlayer target, ChatChannel channel, int hash) {
         Inventory inv = Bukkit.createInventory(null, this.getSlots(), "VentureChat: " + target.getName() + " GUI");
-        ItemStack close = null;
-        ItemStack skull = null;
+        ItemStack close;
+        ItemStack skull;
         if (VersionHandler.is1_7()) {
             close = new ItemStack(Material.BEDROCK);
         } else {
@@ -94,7 +95,7 @@ public class VentureChatGui extends Command {
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         skullMeta.setOwner(target.getName());
         skullMeta.setDisplayName(ChatColor.AQUA + target.getName());
-        List<String> skullLore = new ArrayList<String>();
+        List<String> skullLore = new ArrayList<>();
         skullLore.add(ChatColor.GRAY + "Channel: " + channel.getColor() + channel.getName());
         skullLore.add(ChatColor.GRAY + "Hash: " + channel.getColor() + hash);
         skullMeta.setLore(skullLore);
@@ -117,7 +118,7 @@ public class VentureChatGui extends Command {
                     displayName = PlaceholderAPI.setBracketPlaceholders(target.getPlayer(), displayName);
                 }
                 gMeta.setDisplayName(Format.FormatStringAll(displayName));
-                List<String> gLore = new ArrayList<String>();
+                List<String> gLore = new ArrayList<>();
                 gMeta.setLore(gLore);
                 gStack.setItemMeta(gMeta);
                 inv.setItem(g.getSlot(), gStack);
@@ -131,8 +132,8 @@ public class VentureChatGui extends Command {
     @SuppressWarnings("deprecation")
     private void openInventoryDiscord(MineverseChatPlayer mcp, ChatChannel channel, int hash) {
         Inventory inv = Bukkit.createInventory(null, this.getSlots(), "VentureChat: Discord_Message GUI");
-        ItemStack close = null;
-        ItemStack skull = null;
+        ItemStack close;
+        ItemStack skull;
         if (VersionHandler.is1_7()) {
             close = new ItemStack(Material.BEDROCK);
         } else {
@@ -152,7 +153,7 @@ public class VentureChatGui extends Command {
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         skullMeta.setOwner("Scarsz");
         skullMeta.setDisplayName("�bDiscord_Message");
-        List<String> skullLore = new ArrayList<String>();
+        List<String> skullLore = new ArrayList<>();
         skullLore.add("�7Channel: " + channel.getColor() + channel.getName());
         skullLore.add("�7Hash: " + channel.getColor() + hash);
         skullMeta.setLore(skullLore);
@@ -172,7 +173,7 @@ public class VentureChatGui extends Command {
                 ItemMeta gMeta = gStack.getItemMeta();
                 String displayName = g.getText().replace("{player_name}", "Discord_Message").replace("{channel}", channel.getName()).replace("{hash}", hash + "");
                 gMeta.setDisplayName(Format.FormatStringAll(displayName));
-                List<String> gLore = new ArrayList<String>();
+                List<String> gLore = new ArrayList<>();
                 gMeta.setLore(gLore);
                 gStack.setItemMeta(gMeta);
                 inv.setItem(g.getSlot(), gStack);

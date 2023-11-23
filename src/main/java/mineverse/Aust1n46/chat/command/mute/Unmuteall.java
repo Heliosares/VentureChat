@@ -7,6 +7,7 @@ import mineverse.Aust1n46.chat.channel.ChatChannel;
 import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 public class Unmuteall extends Command {
     public Unmuteall() {
@@ -14,7 +15,7 @@ public class Unmuteall extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String command, String[] args) {
+    public boolean execute(CommandSender sender, @NotNull String command, String[] args) {
         if (sender.hasPermission("venturechat.mute")) {
             if (args.length < 1) {
                 sender.sendMessage(LocalizedMessage.COMMAND_INVALID_ARGUMENTS.toString().replace("{command}", "/unmuteall").replace("{args}", "[player]"));

@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 //This class is a custom event that is part of the plugins API.  It is called when a player executes the mute command.
 public class MutePlayerEvent extends Event implements Cancellable {    //unimplemented
@@ -26,7 +27,7 @@ public class MutePlayerEvent extends Event implements Cancellable {    //unimple
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return handlers;
     }
 

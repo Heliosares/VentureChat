@@ -6,14 +6,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Alias {
+public record Alias(String name, int arguments, List<String> components, String permission) {
     private static final MineverseChat plugin = MineverseChat.getInstance();
     private static List<Alias> aliases;
-
-    private final String name;
-    private final int arguments;
-    private final List<String> components;
-    private final String permission;
 
     public Alias(String name, int arguments, List<String> components, String permission) {
         this.name = name;
@@ -23,14 +18,14 @@ public class Alias {
     }
 
     public static void initialize() {
-        aliases = new ArrayList<Alias>();
+        aliases = new ArrayList<>();
         ConfigurationSection cs = plugin.getConfig().getConfigurationSection("alias");
+        if (cs == null) throw new IllegalArgumentException("No alias section");
         for (String key : cs.getKeys(false)) {
-            String name = key;
             int arguments = cs.getInt(key + ".arguments", 0);
             List<String> components = cs.getStringList(key + ".components");
             String permissions = cs.getString(key + ".permissions", "None");
-            aliases.add(new Alias(name, arguments, components, permissions));
+            aliases.add(new Alias(key, arguments, components, permissions));
         }
     }
 
@@ -40,21 +35,5 @@ public class Alias {
 
     public boolean hasPermission() {
         return !permission.equalsIgnoreCase("venturechat.none");
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getArguments() {
-        return arguments;
-    }
-
-    public List<String> getComponents() {
-        return components;
-    }
-
-    public String getPermission() {
-        return permission;
     }
 }

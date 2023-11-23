@@ -13,6 +13,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -27,7 +28,7 @@ public class Chwho extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String command, String[] args) {
+    public boolean execute(CommandSender sender, @NotNull String command, String[] args) {
         StringBuilder playerlist = new StringBuilder();
         if (sender.hasPermission("venturechat.chwho")) {
             if (args.length > 0) {

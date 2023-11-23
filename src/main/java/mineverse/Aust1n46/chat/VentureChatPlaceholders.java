@@ -6,10 +6,11 @@ import mineverse.Aust1n46.chat.api.MineverseChatAPI;
 import mineverse.Aust1n46.chat.api.MineverseChatPlayer;
 import mineverse.Aust1n46.chat.channel.ChatChannel;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class VentureChatPlaceholders extends PlaceholderExpansion {
     @Override
-    public String onPlaceholderRequest(Player p, String identifier) {
+    public String onPlaceholderRequest(Player p, @NotNull String identifier) {
         if (p == null) {
             return null;
         }
@@ -61,17 +62,17 @@ public class VentureChatPlaceholders extends PlaceholderExpansion {
     }
 
     @Override
-    public String getAuthor() {
+    public @NotNull String getAuthor() {
         return "Aust1n46";
     }
 
     @Override
-    public String getIdentifier() {
+    public @NotNull String getIdentifier() {
         return "venturechat";
     }
 
     @Override
-    public String getVersion() {
+    public @NotNull String getVersion() {
         return MineverseChat.getInstance().getDescription().getVersion();
     }
 }

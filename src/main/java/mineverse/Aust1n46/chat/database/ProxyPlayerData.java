@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Class for reading and writing proxy player data.
@@ -37,20 +38,20 @@ public class ProxyPlayerData {
                     source.sendConsoleMessage("&8[&eVentureChat&8]&c - Skipping Offline UUID: " + uuid);
                     continue;
                 }
-                Set<String> listening = new HashSet<String>();
+                Set<String> listening = new HashSet<>();
                 StringTokenizer l = new StringTokenizer(playerData.getString(uuidString + ".channels"), ",");
                 while (l.hasMoreTokens()) {
                     String channel = l.nextToken();
                     listening.add(channel);
                 }
-                HashMap<String, MuteContainer> mutes = new HashMap<String, MuteContainer>();
+                HashMap<String, MuteContainer> mutes = new HashMap<>();
                 StringTokenizer m = new StringTokenizer(playerData.getString(uuidString + ".mutes"), ",");
                 while (m.hasMoreTokens()) {
                     String[] parts = m.nextToken().split(":");
                     String channelName = parts[0];
                     mutes.put(channelName, new MuteContainer(channelName, Long.parseLong(parts[1])));
                 }
-                HashSet<UUID> ignores = new HashSet<UUID>();
+                HashSet<UUID> ignores = new HashSet<>();
                 StringTokenizer n = new StringTokenizer(playerData.getString(uuidString + ".ignores"), ",");
                 while (n.hasMoreTokens()) {
                     String ignore = n.nextToken();
@@ -70,14 +71,12 @@ public class ProxyPlayerData {
     }
 
     public static void loadProxyPlayerData(File dataFolder, VentureChatProxySource source) {
-        try {
-            File playerDataDirectory = dataFolder;
-            if (!playerDataDirectory.exists()) {
-                playerDataDirectory.mkdirs();
-            }
-            Files.walk(Paths.get(dataFolder.getAbsolutePath()))
-                    .filter(Files::isRegularFile)
-                    .forEach((path) -> readProxyPlayerDataFile(path, source));
+        File playerDataDirectory = dataFolder;
+        if (!playerDataDirectory.exists()) {
+            playerDataDirectory.mkdirs();
+        }
+        try (Stream<Path> pathStream = Files.walk(Paths.get(dataFolder.getAbsolutePath()))) {
+            pathStream.filter(Files::isRegularFile).forEach((path) -> readProxyPlayerDataFile(path, source));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -139,19 +138,19 @@ public class ProxyPlayerData {
                 proxyPlayerDataFile.delete();
                 return;
             }
-            Set<String> listening = new HashSet<String>();
+            Set<String> listening = new HashSet<>();
             StringTokenizer l = new StringTokenizer(proxyPlayerDataFileConfiguration.getString("channels"), ",");
             while (l.hasMoreTokens()) {
                 String channel = l.nextToken();
                 listening.add(channel);
             }
-            HashMap<String, MuteContainer> mutes = new HashMap<String, MuteContainer>();
+            HashMap<String, MuteContainer> mutes = new HashMap<>();
             Configuration muteSection = proxyPlayerDataFileConfiguration.getSection("mutes");
             for (String channelName : muteSection.getKeys()) {
                 Configuration channelSection = muteSection.getSection(channelName);
                 mutes.put(channelName, new MuteContainer(channelName, channelSection.getLong("time"), channelSection.getString("reason")));
             }
-            HashSet<UUID> ignores = new HashSet<UUID>();
+            HashSet<UUID> ignores = new HashSet<>();
             StringTokenizer n = new StringTokenizer(proxyPlayerDataFileConfiguration.getString("ignores"), ",");
             while (n.hasMoreTokens()) {
                 String ignore = n.nextToken();
@@ -166,9 +165,7 @@ public class ProxyPlayerData {
             proxyPlayerDataFile.delete();
             return;
         }
-        if (smcp != null) {
-            MineverseChatAPI.addSynchronizedMineverseChatPlayerToMap(smcp);
-        }
+        MineverseChatAPI.addSynchronizedMineverseChatPlayerToMap(smcp);
     }
 
     /**

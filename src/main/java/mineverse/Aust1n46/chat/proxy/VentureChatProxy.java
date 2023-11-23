@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class VentureChatProxy {
     public static String PLUGIN_MESSAGING_CHANNEL_NAMESPACE = "venturechat";
     public static String PLUGIN_MESSAGING_CHANNEL_NAME = "data";
-    public static String PLUGIN_MESSAGING_CHANNEL_STRING = "venturechat:data";
+    public static final String PLUGIN_MESSAGING_CHANNEL_STRING = "venturechat:data";
 
     public static void onPluginMessage(byte[] data, String serverName, VentureChatProxySource source) {
         ByteArrayInputStream instream = new ByteArrayInputStream(data);
@@ -48,11 +48,11 @@ public class VentureChatProxy {
                 out.writeUTF(primaryGroup);
                 out.writeUTF(nickname);
                 for (VentureChatProxyServer send : source.getServers()) {
-                    if (!send.isEmpty()) {
-                        if (!bungeeToggle && !send.getName().equalsIgnoreCase(serverName)) {
+                    if (!send.empty()) {
+                        if (!bungeeToggle && !send.name().equalsIgnoreCase(serverName)) {
                             continue;
                         }
-                        source.sendPluginMessage(send.getName(), outstream.toByteArray());
+                        source.sendPluginMessage(send.name(), outstream.toByteArray());
                     }
                 }
             }
@@ -63,8 +63,8 @@ public class VentureChatProxy {
                 out.writeUTF(chatchannel);
                 out.writeUTF(message);
                 source.getServers().forEach(send -> {
-                    if (!send.isEmpty()) {
-                        source.sendPluginMessage(send.getName(), outstream.toByteArray());
+                    if (!send.empty()) {
+                        source.sendPluginMessage(send.name(), outstream.toByteArray());
                     }
                 });
             }
@@ -88,8 +88,8 @@ public class VentureChatProxy {
                     out.writeUTF(sender);
                     out.writeUTF(channel);
                     source.getServers().forEach(send -> {
-                        if (!send.isEmpty()) {
-                            source.sendPluginMessage(send.getName(), outstream.toByteArray());
+                        if (!send.empty()) {
+                            source.sendPluginMessage(send.name(), outstream.toByteArray());
                         }
                     });
                 }
@@ -110,7 +110,7 @@ public class VentureChatProxy {
                     }
                     AtomicInteger servers = new AtomicInteger(0);
                     source.getServers().forEach(send -> {
-                        if (!send.isEmpty()) {
+                        if (!send.empty()) {
                             servers.incrementAndGet();
                         }
                     });
@@ -134,8 +134,8 @@ public class VentureChatProxy {
                 out.writeUTF("RemoveMessage");
                 out.writeUTF(hash);
                 source.getServers().forEach(send -> {
-                    if (!send.isEmpty()) {
-                        source.sendPluginMessage(send.getName(), outstream.toByteArray());
+                    if (!send.empty()) {
+                        source.sendPluginMessage(send.name(), outstream.toByteArray());
                     }
                 });
             }
@@ -158,8 +158,8 @@ public class VentureChatProxy {
                     out.writeUTF(player);
                     out.writeUTF(sender);
                     source.getServers().forEach(send -> {
-                        if (!send.isEmpty()) {
-                            source.sendPluginMessage(send.getName(), outstream.toByteArray());
+                        if (!send.empty()) {
+                            source.sendPluginMessage(send.name(), outstream.toByteArray());
                         }
                     });
                 }
@@ -176,7 +176,7 @@ public class VentureChatProxy {
                     smcp.incrementMessagePackets();
                     AtomicInteger servers = new AtomicInteger(0);
                     source.getServers().forEach(send -> {
-                        if (!send.isEmpty()) {
+                        if (!send.empty()) {
                             servers.incrementAndGet();
                         }
                     });
@@ -186,7 +186,7 @@ public class VentureChatProxy {
                         out.writeUTF("Offline");
                         out.writeUTF(player);
                         out.writeUTF(sender);
-                        if (!source.getServer(server).isEmpty()) {
+                        if (!source.getServer(server).empty()) {
                             source.sendPluginMessage(server, outstream.toByteArray());
                         }
                     }
@@ -201,7 +201,7 @@ public class VentureChatProxy {
                     out.writeUTF(player);
                     out.writeUTF(receiverName);
                     out.writeUTF(sender);
-                    if (!source.getServer(server).isEmpty()) {
+                    if (!source.getServer(server).empty()) {
                         source.sendPluginMessage(server, outstream.toByteArray());
                     }
                 }
@@ -213,7 +213,7 @@ public class VentureChatProxy {
                     out.writeUTF("Bypass");
                     out.writeUTF(player);
                     out.writeUTF(sender);
-                    if (!source.getServer(server).isEmpty()) {
+                    if (!source.getServer(server).empty()) {
                         source.sendPluginMessage(server, outstream.toByteArray());
                     }
                 }
@@ -238,8 +238,8 @@ public class VentureChatProxy {
                     out.writeLong(time);
                     out.writeUTF(reason);
                     source.getServers().forEach(send -> {
-                        if (!send.isEmpty()) {
-                            source.sendPluginMessage(send.getName(), outstream.toByteArray());
+                        if (!send.empty()) {
+                            source.sendPluginMessage(send.name(), outstream.toByteArray());
                         }
                     });
                 }
@@ -257,7 +257,7 @@ public class VentureChatProxy {
                     out.writeUTF(channelName);
                     out.writeLong(time);
                     out.writeUTF(reason);
-                    if (!source.getServer(server).isEmpty()) {
+                    if (!source.getServer(server).empty()) {
                         source.sendPluginMessage(server, outstream.toByteArray());
                     }
                 }
@@ -270,7 +270,7 @@ public class VentureChatProxy {
                     temporaryDataInstance.incrementMessagePackets();
                     AtomicInteger servers = new AtomicInteger(0);
                     source.getServers().forEach(send -> {
-                        if (!send.isEmpty()) {
+                        if (!send.empty()) {
                             servers.incrementAndGet();
                         }
                     });
@@ -280,7 +280,7 @@ public class VentureChatProxy {
                         out.writeUTF("Offline");
                         out.writeUTF(senderIdentifier);
                         out.writeUTF(playerToMute);
-                        if (!source.getServer(server).isEmpty()) {
+                        if (!source.getServer(server).empty()) {
                             source.sendPluginMessage(server, outstream.toByteArray());
                         }
                     }
@@ -295,7 +295,7 @@ public class VentureChatProxy {
                     out.writeUTF(senderIdentifier);
                     out.writeUTF(playerToMute);
                     out.writeUTF(channelName);
-                    if (!source.getServer(server).isEmpty()) {
+                    if (!source.getServer(server).empty()) {
                         source.sendPluginMessage(server, outstream.toByteArray());
                     }
                 }
@@ -316,8 +316,8 @@ public class VentureChatProxy {
                     out.writeUTF(playerToUnmute);
                     out.writeUTF(channelName);
                     source.getServers().forEach(send -> {
-                        if (!send.isEmpty()) {
-                            source.sendPluginMessage(send.getName(), outstream.toByteArray());
+                        if (!send.empty()) {
+                            source.sendPluginMessage(send.name(), outstream.toByteArray());
                         }
                     });
                 }
@@ -331,7 +331,7 @@ public class VentureChatProxy {
                     out.writeUTF(senderIdentifier);
                     out.writeUTF(playerToUnmute);
                     out.writeUTF(channelName);
-                    if (!source.getServer(server).isEmpty()) {
+                    if (!source.getServer(server).empty()) {
                         source.sendPluginMessage(server, outstream.toByteArray());
                     }
                 }
@@ -344,7 +344,7 @@ public class VentureChatProxy {
                     temporaryDataInstance.incrementMessagePackets();
                     AtomicInteger servers = new AtomicInteger(0);
                     source.getServers().forEach(send -> {
-                        if (!send.isEmpty()) {
+                        if (!send.empty()) {
                             servers.incrementAndGet();
                         }
                     });
@@ -354,7 +354,7 @@ public class VentureChatProxy {
                         out.writeUTF("Offline");
                         out.writeUTF(senderIdentifier);
                         out.writeUTF(playerToUnmute);
-                        if (!source.getServer(server).isEmpty()) {
+                        if (!source.getServer(server).empty()) {
                             source.sendPluginMessage(server, outstream.toByteArray());
                         }
                     }
@@ -369,7 +369,7 @@ public class VentureChatProxy {
                     out.writeUTF(senderIdentifier);
                     out.writeUTF(playerToUnmute);
                     out.writeUTF(channelName);
-                    if (!source.getServer(server).isEmpty()) {
+                    if (!source.getServer(server).empty()) {
                         source.sendPluginMessage(server, outstream.toByteArray());
                     }
                 }
@@ -403,8 +403,8 @@ public class VentureChatProxy {
                     out.writeUTF(spy);
                     out.writeUTF(msg);
                     source.getServers().forEach(serv -> {
-                        if (!serv.isEmpty()) {
-                            source.sendPluginMessage(serv.getName(), outstream.toByteArray());
+                        if (!serv.empty()) {
+                            source.sendPluginMessage(serv.name(), outstream.toByteArray());
                         }
                     });
                 }
@@ -421,7 +421,7 @@ public class VentureChatProxy {
                     smcp.incrementMessagePackets();
                     AtomicInteger servers = new AtomicInteger(0);
                     source.getServers().forEach(send -> {
-                        if (!send.isEmpty()) {
+                        if (!send.empty()) {
                             servers.incrementAndGet();
                         }
                     });
@@ -431,7 +431,7 @@ public class VentureChatProxy {
                         out.writeUTF("Offline");
                         out.writeUTF(player);
                         out.writeUTF(sender);
-                        if (!source.getServer(server).isEmpty()) {
+                        if (!source.getServer(server).empty()) {
                             source.sendPluginMessage(server, outstream.toByteArray());
                         }
                     }
@@ -444,7 +444,7 @@ public class VentureChatProxy {
                     out.writeUTF("Ignore");
                     out.writeUTF(player);
                     out.writeUTF(sender);
-                    if (!source.getServer(server).isEmpty()) {
+                    if (!source.getServer(server).empty()) {
                         source.sendPluginMessage(server, outstream.toByteArray());
                     }
                 }
@@ -456,7 +456,7 @@ public class VentureChatProxy {
                     out.writeUTF("Blocked");
                     out.writeUTF(player);
                     out.writeUTF(sender);
-                    if (!source.getServer(server).isEmpty()) {
+                    if (!source.getServer(server).empty()) {
                         source.sendPluginMessage(server, outstream.toByteArray());
                     }
                 }
@@ -470,7 +470,7 @@ public class VentureChatProxy {
                     out.writeUTF(message);
                     out.writeUTF(player);
                     out.writeUTF(sender);
-                    if (!source.getServer(server).isEmpty()) {
+                    if (!source.getServer(server).empty()) {
                         source.sendPluginMessage(server, outstream.toByteArray());
                     }
                 }
@@ -488,7 +488,7 @@ public class VentureChatProxy {
                     out.writeUTF(receiverUUID);
                     out.writeUTF(sender);
                     out.writeUTF(echo);
-                    if (!source.getServer(server).isEmpty()) {
+                    if (!source.getServer(server).empty()) {
                         source.sendPluginMessage(server, outstream.toByteArray());
                     }
                     outstream.reset();
@@ -499,8 +499,8 @@ public class VentureChatProxy {
                     out.writeUTF(sName);
                     out.writeUTF(spy);
                     source.getServers().forEach(send -> {
-                        if (!send.isEmpty()) {
-                            source.sendPluginMessage(send.getName(), outstream.toByteArray());
+                        if (!send.empty()) {
+                            source.sendPluginMessage(send.name(), outstream.toByteArray());
                         }
                     });
                 }
@@ -542,7 +542,7 @@ public class VentureChatProxy {
                     for (UUID ignore : smcp.getIgnores()) {
                         out.writeUTF(ignore.toString());
                     }
-                    if (!source.getServer(server).isEmpty()) {
+                    if (!source.getServer(server).empty()) {
                         source.sendPluginMessage(server, outstream.toByteArray());
                     }
                     out.writeBoolean(smcp.isVanished());

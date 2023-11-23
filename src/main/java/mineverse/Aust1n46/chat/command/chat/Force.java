@@ -5,6 +5,7 @@ import mineverse.Aust1n46.chat.api.MineverseChatPlayer;
 import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 public class Force extends Command {
     public Force() {
@@ -12,7 +13,7 @@ public class Force extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String command, String[] args) {
+    public boolean execute(CommandSender sender, @NotNull String command, String[] args) {
         if (sender.hasPermission("venturechat.force")) {
             if (args.length < 2) {
                 sender.sendMessage(LocalizedMessage.COMMAND_INVALID_ARGUMENTS.toString().replace("{command}", "/force").replace("{args}", "[player] [message]"));

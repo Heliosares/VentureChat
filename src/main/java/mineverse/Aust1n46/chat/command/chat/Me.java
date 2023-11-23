@@ -6,6 +6,7 @@ import mineverse.Aust1n46.chat.utilities.Format;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class Me extends Command {
     public Me() {
@@ -13,13 +14,13 @@ public class Me extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String command, String[] args) {
+    public boolean execute(CommandSender sender, @NotNull String command, String[] args) {
         if (sender.hasPermission("venturechat.me")) {
             if (args.length > 0) {
                 StringBuilder msg = new StringBuilder();
-                for (int x = 0; x < args.length; x++)
-                    if (!args[x].isEmpty())
-                        msg.append(" ").append(args[x]);
+                for (String arg : args)
+                    if (!arg.isEmpty())
+                        msg.append(" ").append(arg);
                 if (sender instanceof Player && MineverseChatAPI.getOnlineMineverseChatPlayer((Player) sender).hasFilter()) {
                     msg = new StringBuilder(Format.FilterChat(msg.toString()));
                 }

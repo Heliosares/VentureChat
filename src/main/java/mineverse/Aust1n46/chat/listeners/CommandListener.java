@@ -58,31 +58,31 @@ public class CommandListener implements Listener {
         String message = event.getMessage();
 
         for (Alias a : Alias.getAliases()) {
-            if (message.toLowerCase().substring(1).split(" ")[0].equals(a.getName().toLowerCase())) {
-                for (String s : a.getComponents()) {
-                    if (!mcp.getPlayer().hasPermission(a.getPermission()) && a.hasPermission()) {
+            if (message.toLowerCase().substring(1).split(" ")[0].equals(a.name().toLowerCase())) {
+                for (String s : a.components()) {
+                    if (!mcp.getPlayer().hasPermission(a.permission()) && a.hasPermission()) {
                         mcp.getPlayer().sendMessage(ChatColor.RED + "You do not have permission for this alias.");
                         event.setCancelled(true);
                         return;
                     }
                     int num = 1;
-                    if (message.length() < a.getName().length() + 2 || a.getArguments() == 0)
+                    if (message.length() < a.name().length() + 2 || a.arguments() == 0)
                         num = 0;
                     int arg = 0;
-                    if (message.substring(a.getName().length() + 1 + num).isEmpty())
+                    if (message.substring(a.name().length() + 1 + num).isEmpty())
                         arg = 1;
-                    String[] args = message.substring(a.getName().length() + 1 + num).split(" ");
+                    String[] args = message.substring(a.name().length() + 1 + num).split(" ");
                     StringBuilder send = new StringBuilder();
-                    if (args.length - arg < a.getArguments()) {
+                    if (args.length - arg < a.arguments()) {
                         String keyword = "arguments.";
-                        if (a.getArguments() == 1)
+                        if (a.arguments() == 1)
                             keyword = "argument.";
-                        mcp.getPlayer().sendMessage(ChatColor.RED + "Invalid arguments for this alias, enter at least " + a.getArguments() + " " + keyword);
+                        mcp.getPlayer().sendMessage(ChatColor.RED + "Invalid arguments for this alias, enter at least " + a.arguments() + " " + keyword);
                         event.setCancelled(true);
                         return;
                     }
-                    for (int b = 0; b < args.length; b++) {
-                        send.append(" ").append(args[b]);
+                    for (String string : args) {
+                        send.append(" ").append(string);
                     }
                     if (send.length() > 0)
                         send = new StringBuilder(send.substring(1));
@@ -96,12 +96,13 @@ public class CommandListener implements Listener {
                     if (mcp.getPlayer().hasPermission("venturechat.format")) {
                         send = new StringBuilder(Format.FormatString(send.toString(), mcp.getPlayer().hasPermission("venturechat.format.magic")));
                     }
+                    String replaced$ = s.substring(9).replace("$", send.toString());
                     if (s.startsWith("Command:")) {
-                        mcp.getPlayer().chat(s.substring(9).replace("$", send.toString()));
+                        mcp.getPlayer().chat(replaced$);
                         event.setCancelled(true);
                     }
                     if (s.startsWith("Message:")) {
-                        mcp.getPlayer().sendMessage(s.substring(9).replace("$", send.toString()));
+                        mcp.getPlayer().sendMessage(replaced$);
                         event.setCancelled(true);
                     }
                     if (s.startsWith("Broadcast:")) {

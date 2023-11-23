@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
 public class Broadcast extends Command {
     private final MineverseChat plugin = MineverseChat.getInstance();
@@ -16,7 +17,7 @@ public class Broadcast extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String command, String[] args) {
+    public boolean execute(@NotNull CommandSender sender, @NotNull String command, String[] args) {
         ConfigurationSection bs = plugin.getConfig().getConfigurationSection("broadcast");
         String broadcastColor = bs.getString("color", "white");
         String broadcastPermissions = bs.getString("permissions", "None");
@@ -24,9 +25,9 @@ public class Broadcast extends Command {
         if (broadcastPermissions.equalsIgnoreCase("None") || sender.hasPermission(broadcastPermissions)) {
             if (args.length > 0) {
                 StringBuilder bc = new StringBuilder();
-                for (int x = 0; x < args.length; x++) {
-                    if (!args[x].isEmpty())
-                        bc.append(args[x]).append(" ");
+                for (String arg : args) {
+                    if (!arg.isEmpty())
+                        bc.append(arg).append(" ");
                 }
                 bc = new StringBuilder(Format.FormatStringAll(bc.toString()));
                 Format.broadcastToServer(broadcastDisplayTag + ChatColor.valueOf(broadcastColor.toUpperCase()) + " " + bc);

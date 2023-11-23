@@ -6,6 +6,7 @@ import mineverse.Aust1n46.chat.api.MineverseChatPlayer;
 import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 public class Commandblock extends Command {
     private final MineverseChat plugin = MineverseChat.getInstance();
@@ -15,7 +16,7 @@ public class Commandblock extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String command, String[] args) {
+    public boolean execute(CommandSender sender, @NotNull String command, String[] args) {
         if (sender.hasPermission("venturechat.commandblock")) {
             if (args.length > 1) {
                 MineverseChatPlayer player = MineverseChatAPI.getOnlineMineverseChatPlayer(args[0]);

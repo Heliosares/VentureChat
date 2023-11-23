@@ -42,16 +42,11 @@ public class ChatListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent event) {
         event.setCancelled(true);
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-            @Override
-            public void run() {
-                handleTrueAsyncPlayerChatEvent(event);
-            }
-        });
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> handleTrueAsyncPlayerChatEvent(event));
     }
 
     public void handleTrueAsyncPlayerChatEvent(AsyncPlayerChatEvent event) {
-        boolean bungee = false;
+        boolean bungee;
         String chat = event.getMessage();
         String format;
         Set<Player> recipients = event.getRecipients();
@@ -100,9 +95,9 @@ public class ChatListener implements Listener {
                     return;
                 }
                 String filtered = chat;
-                String echo = "";
-                String send = "";
-                String spy = "";
+                String echo;
+                String send;
+                String spy;
                 if (mcp.hasFilter()) {
                     filtered = Format.FilterChat(filtered);
                 }
@@ -192,7 +187,7 @@ public class ChatListener implements Listener {
         Location locreceip;
         Location locsender = mcp.getPlayer().getLocation();
         Location diff;
-        Boolean filterthis = true;
+        Boolean filterthis;
         mcp.addListening(eventChannel.getName());
         if (mcp.isMuted(eventChannel.getName())) {
             MuteContainer muteContainer = mcp.getMute(eventChannel.getName());
@@ -236,7 +231,7 @@ public class ChatListener implements Listener {
             return;
         }
         Double chDistance = (double) 0;
-        String curColor = "";
+        String curColor;
         if (eventChannel.hasPermission() && !mcp.getPlayer().hasPermission(eventChannel.getPermission())) {
             mcp.getPlayer().sendMessage(LocalizedMessage.CHANNEL_NO_PERMISSION.toString());
             mcp.setQuickChat(false);
@@ -260,14 +255,13 @@ public class ChatListener implements Listener {
         }
         try {
             if (mcp.hasCooldown(eventChannel)) {
-                long cooldownTime = mcp.getCooldowns().get(eventChannel).longValue();
+                long cooldownTime = mcp.getCooldowns().get(eventChannel);
                 if (dateTimeSeconds < cooldownTime) {
                     long remainingCooldownTime = cooldownTime - dateTimeSeconds;
                     String cooldownString = Format.parseTimeStringFromMillis(remainingCooldownTime * Format.MILLISECONDS_PER_SECOND);
                     mcp.getPlayer().sendMessage(LocalizedMessage.CHANNEL_COOLDOWN.toString()
                             .replace("{cooldown}", cooldownString));
                     mcp.setQuickChat(false);
-                    bungee = false;
                     return;
                 }
             }

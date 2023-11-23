@@ -78,10 +78,10 @@ public class MineverseChatPlayer {
         this.replyPlayer = null;
         this.partyChat = false;
         this.modified = false;
-        this.messages = new ArrayList<ChatMessage>();
+        this.messages = new ArrayList<>();
         this.jsonFormat = jsonFormat;
-        this.cooldowns = new HashMap<ChatChannel, Long>();
-        this.spam = new HashMap<ChatChannel, List<Long>>();
+        this.cooldowns = new HashMap<>();
+        this.spam = new HashMap<>();
         this.messageToggle = messageToggle;
         this.bungeeToggle = bungeeToggle;
     }
@@ -90,11 +90,11 @@ public class MineverseChatPlayer {
         this.uuid = uuid;
         this.name = name;
         this.currentChannel = ChatChannel.getDefaultChannel();
-        this.ignores = new HashSet<UUID>();
-        this.listening = new HashSet<String>();
+        this.ignores = new HashSet<>();
+        this.listening = new HashSet<>();
         listening.add(currentChannel.getName());
-        this.mutes = new HashMap<String, MuteContainer>();
-        this.blockedCommands = new HashSet<String>();
+        this.mutes = new HashMap<>();
+        this.blockedCommands = new HashSet<>();
         this.host = false;
         this.party = null;
         this.filter = true;
@@ -111,10 +111,10 @@ public class MineverseChatPlayer {
         this.replyPlayer = null;
         this.partyChat = false;
         this.modified = false;
-        this.messages = new ArrayList<ChatMessage>();
+        this.messages = new ArrayList<>();
         this.jsonFormat = "Default";
-        this.cooldowns = new HashMap<ChatChannel, Long>();
-        this.spam = new HashMap<ChatChannel, List<Long>>();
+        this.cooldowns = new HashMap<>();
+        this.spam = new HashMap<>();
         this.messageToggle = true;
         this.bungeeToggle = true;
     }
@@ -280,11 +280,10 @@ public class MineverseChatPlayer {
         return false;
     }
 
-    @Deprecated
     /**
-     * Not needed and never resets to it's original null value after being set once.
-     * @return
+     * Not needed and never resets to its original null value after being set once.
      */
+    @Deprecated
     public boolean hasQuickChannel() {
         return this.quickChannel != null;
     }
@@ -319,7 +318,7 @@ public class MineverseChatPlayer {
 
     public boolean addSpam(ChatChannel channel) {
         if (channel != null) {
-            spam.put(channel, new ArrayList<Long>());
+            spam.put(channel, new ArrayList<>());
             return true;
         }
         return false;
@@ -347,9 +346,9 @@ public class MineverseChatPlayer {
     public void setJsonFormat() {
         this.jsonFormat = "Default";
         for (JsonFormat j : JsonFormat.getJsonFormats()) {
-            if (this.getPlayer().hasPermission("venturechat.json." + j.getName())) {
-                if (JsonFormat.getJsonFormat(this.getJsonFormat()).getPriority() > j.getPriority()) {
-                    this.jsonFormat = j.getName();
+            if (this.getPlayer().hasPermission("venturechat.json." + j.name())) {
+                if (JsonFormat.getJsonFormat(this.getJsonFormat()).priority() > j.priority()) {
+                    this.jsonFormat = j.name();
                 }
             }
         }

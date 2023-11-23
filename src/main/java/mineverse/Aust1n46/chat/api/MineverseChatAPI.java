@@ -12,12 +12,12 @@ import java.util.*;
  * @author Aust1n46
  */
 public final class MineverseChatAPI {
-    private static final HashMap<UUID, MineverseChatPlayer> playerMap = new HashMap<UUID, MineverseChatPlayer>();
-    private static final HashMap<String, UUID> namesMap = new HashMap<String, UUID>();
-    private static final HashMap<UUID, MineverseChatPlayer> onlinePlayerMap = new HashMap<UUID, MineverseChatPlayer>();
-    private static final List<String> networkPlayerNames = new ArrayList<String>();
+    private static final HashMap<UUID, MineverseChatPlayer> playerMap = new HashMap<>();
+    private static final HashMap<String, UUID> namesMap = new HashMap<>();
+    private static final HashMap<UUID, MineverseChatPlayer> onlinePlayerMap = new HashMap<>();
+    private static final List<String> networkPlayerNames = new ArrayList<>();
 
-    private static final HashMap<UUID, SynchronizedMineverseChatPlayer> proxyPlayerMap = new HashMap<UUID, SynchronizedMineverseChatPlayer>();
+    private static final HashMap<UUID, SynchronizedMineverseChatPlayer> proxyPlayerMap = new HashMap<>();
 
     public static List<String> getNetworkPlayerNames() {
         return networkPlayerNames;

@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class Chatinfo extends Command {
     public Chatinfo() {
@@ -16,7 +17,7 @@ public class Chatinfo extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String command, String[] args) {
+    public boolean execute(CommandSender sender, @NotNull String command, String[] args) {
         if (sender.hasPermission("venturechat.chatinfo")) {
             if (args.length == 0) {
                 if (!(sender instanceof Player)) {

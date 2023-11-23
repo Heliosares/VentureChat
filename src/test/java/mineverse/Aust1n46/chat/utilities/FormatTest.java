@@ -43,7 +43,7 @@ public class FormatTest {
 	
 	@Before
 	public void setUp() {
-		filters = new ArrayList<String>();
+		filters = new ArrayList<>();
 		filters.add("ass,donut");
 
 		FileConfiguration mockConfig = Mockito.mock(FileConfiguration.class);
@@ -53,7 +53,7 @@ public class FormatTest {
 
 	@After
 	public void tearDown() {
-		filters = new ArrayList<String>();
+		filters = new ArrayList<>();
 	}
 
 	@Test

@@ -9,6 +9,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -23,7 +24,7 @@ public class Unmute extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String command, String[] args) {
+    public boolean execute(CommandSender sender, @NotNull String command, String[] args) {
         if (sender.hasPermission("venturechat.mute")) {
             if (args.length < 2) {
                 sender.sendMessage(LocalizedMessage.COMMAND_INVALID_ARGUMENTS.toString().replace("{command}", "/unmute").replace("{args}", "[channel] [player]"));
@@ -65,7 +66,7 @@ public class Unmute extends Command {
     }
 
     @Override
-    public List<String> tabComplete(CommandSender sender, String label, String[] args) {
+    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String label, String[] args) {
         List<String> completions = new ArrayList<>();
         if (args.length == 1) {
             StringUtil.copyPartialMatches(args[0], ChatChannel.getChatChannels().stream().map(ChatChannel::getName).collect(Collectors.toList()), completions);

@@ -4,6 +4,7 @@ import mineverse.Aust1n46.chat.channel.ChatChannel;
 import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 public class Chlist extends Command {
     public Chlist() {
@@ -11,7 +12,7 @@ public class Chlist extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String command, String[] args) {
+    public boolean execute(CommandSender sender, @NotNull String command, String[] args) {
         sender.sendMessage(LocalizedMessage.CHANNEL_LIST_HEADER.toString());
         for (ChatChannel chname : ChatChannel.getChatChannels()) {
             if (chname.hasPermission()) {

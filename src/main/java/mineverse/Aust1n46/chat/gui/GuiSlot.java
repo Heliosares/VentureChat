@@ -30,7 +30,7 @@ public class GuiSlot {
     }
 
     public static void initialize() {
-        guiSlots = new ArrayList<GuiSlot>();
+        guiSlots = new ArrayList<>();
         ConfigurationSection cs = plugin.getConfig().getConfigurationSection("venturegui");
         for (String key : cs.getKeys(false)) {
             String name = key;

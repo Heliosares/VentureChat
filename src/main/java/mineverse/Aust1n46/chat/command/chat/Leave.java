@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class Leave extends Command {
     public Leave() {
@@ -17,7 +18,7 @@ public class Leave extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String command, String[] args) {
+    public boolean execute(@NotNull CommandSender sender, @NotNull String command, String[] args) {
         if (!(sender instanceof Player)) {
             Bukkit.getServer().getConsoleSender().sendMessage(LocalizedMessage.COMMAND_MUST_BE_RUN_BY_PLAYER.toString());
             return true;

@@ -5,6 +5,7 @@ import mineverse.Aust1n46.chat.api.MineverseChatPlayer;
 import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 public class Forceall extends Command {
     public Forceall() {
@@ -12,16 +13,16 @@ public class Forceall extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String command, String[] args) {
+    public boolean execute(CommandSender sender, @NotNull String command, String[] args) {
         if (sender.hasPermission("venturechat.forceall")) {
             if (args.length < 1) {
                 sender.sendMessage(LocalizedMessage.COMMAND_INVALID_ARGUMENTS.toString().replace("{command}", "/forceall").replace("{args}", "[message]"));
                 return true;
             }
             StringBuilder forcemsg = new StringBuilder();
-            for (int x = 0; x < args.length; x++) {
-                if (!args[x].isEmpty()) {
-                    forcemsg.append(args[x]).append(" ");
+            for (String arg : args) {
+                if (!arg.isEmpty()) {
+                    forcemsg.append(arg).append(" ");
                 }
             }
             sender.sendMessage(LocalizedMessage.FORCE_ALL.toString().replace("{message}", forcemsg.toString()));

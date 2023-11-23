@@ -122,7 +122,7 @@ public class ChatChannel {
      * Read chat channels from config file and initialize channel array.
      */
     public static void initialize() {
-        chatChannels = new HashMap<String, ChatChannel>();
+        chatChannels = new HashMap<>();
         ConfigurationSection cs = plugin.getConfig().getConfigurationSection("channels");
         int len = (cs.getKeys(false)).size();
         channels = new ChatChannel[len];
@@ -180,7 +180,7 @@ public class ChatChannel {
      * @return {@link Collection}&lt{@link ChatChannel}&gt
      */
     public static Collection<ChatChannel> getChatChannels() {
-        return new HashSet<ChatChannel>(chatChannels.values());
+        return new HashSet<>(chatChannels.values());
     }
 
     /**
@@ -227,7 +227,7 @@ public class ChatChannel {
      * @return {@link List}&lt{@link ChatChannel}&gt
      */
     public static List<ChatChannel> getAutojoinList() {
-        List<ChatChannel> joinlist = new ArrayList<ChatChannel>();
+        List<ChatChannel> joinlist = new ArrayList<>();
         for (ChatChannel c : channels) {
             if (c.getAutojoin()) {
                 joinlist.add(c);
@@ -243,7 +243,7 @@ public class ChatChannel {
      * otherwise.
      */
     public Boolean isMutable() {
-        return Boolean.valueOf(mutable);
+        return mutable;
     }
 
     /**
@@ -253,7 +253,7 @@ public class ChatChannel {
      * {@link Boolean#FALSE} otherwise.
      */
     public Boolean isDefaultchannel() {
-        return Boolean.valueOf(defaultChannel);
+        return defaultChannel;
     }
 
     /**
@@ -263,7 +263,7 @@ public class ChatChannel {
      * {@link Boolean#FALSE} otherwise.
      */
     public Boolean hasDistance() {
-        return Boolean.valueOf(distance > 0);
+        return distance > 0;
     }
 
     /**
@@ -273,7 +273,7 @@ public class ChatChannel {
      * {@link Boolean#FALSE} otherwise.
      */
     public Boolean hasCooldown() {
-        return Boolean.valueOf(cooldown > 0);
+        return cooldown > 0;
     }
 
     /**
@@ -283,7 +283,7 @@ public class ChatChannel {
      * {@link ChatChannel#NO_PERMISSIONS}, {@link Boolean#FALSE} otherwise.
      */
     public Boolean hasPermission() {
-        return Boolean.valueOf(!permission.equalsIgnoreCase(NO_PERMISSIONS));
+        return !permission.equalsIgnoreCase(NO_PERMISSIONS);
     }
 
     /**
@@ -303,7 +303,7 @@ public class ChatChannel {
      * {@link Boolean#FALSE} otherwise.
      */
     public Boolean isFiltered() {
-        return Boolean.valueOf(filter);
+        return filter;
     }
 
     /**
@@ -360,7 +360,7 @@ public class ChatChannel {
      * {@link Boolean#FALSE} otherwise.
      */
     public Boolean getBungee() {
-        return Boolean.valueOf(bungee);
+        return bungee;
     }
 
     /**
@@ -379,7 +379,7 @@ public class ChatChannel {
      * otherwise.
      */
     public Boolean getAutojoin() {
-        return Boolean.valueOf(autojoin);
+        return autojoin;
     }
 
     /**
@@ -450,7 +450,7 @@ public class ChatChannel {
      * @return {@link Double}
      */
     public Double getDistance() {
-        return Double.valueOf(distance);
+        return distance;
     }
 
     /**

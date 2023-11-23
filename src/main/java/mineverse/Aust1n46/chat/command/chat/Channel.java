@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.jetbrains.annotations.NotNull;
 
 public class Channel extends Command implements Listener {
     public Channel() {
@@ -20,7 +21,7 @@ public class Channel extends Command implements Listener {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String command, String[] args) {
+    public boolean execute(@NotNull CommandSender sender, @NotNull String command, String[] args) {
         if (!(sender instanceof Player)) {
             Bukkit.getServer().getConsoleSender().sendMessage(LocalizedMessage.COMMAND_MUST_BE_RUN_BY_PLAYER.toString());
             return true;

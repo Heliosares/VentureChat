@@ -6,6 +6,7 @@ import mineverse.Aust1n46.chat.localization.InternalMessage;
 import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 public class Clearchat extends Command {
     public Clearchat() {
@@ -13,7 +14,7 @@ public class Clearchat extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String command, String[] args) {
+    public boolean execute(CommandSender sender, @NotNull String command, String[] args) {
         if (sender.hasPermission("venturechat.clearchat")) {
             for (MineverseChatPlayer player : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
                 if (!player.getPlayer().hasPermission("venturechat.clearchat.bypass")) {

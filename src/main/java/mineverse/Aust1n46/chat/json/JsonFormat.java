@@ -10,23 +10,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-public class JsonFormat {
+public record JsonFormat(String name, int priority, List<JsonAttribute> jsonAttributes) {
     private static final MineverseChat plugin = MineverseChat.getInstance();
     private static HashMap<String, JsonFormat> jsonFormats;
 
-    private final List<JsonAttribute> jsonAttributes;
-    private final int priority;
-    private final String name;
-
-    public JsonFormat(String name, int priority, List<JsonAttribute> jsonAttributes) {
-        this.name = name;
-        this.priority = priority;
-        this.jsonAttributes = jsonAttributes;
-    }
-
     public static void initialize() {
-        jsonFormats = new HashMap<String, JsonFormat>();
+        jsonFormats = new HashMap<>();
         ConfigurationSection jsonFormatSection = plugin.getConfig().getConfigurationSection("jsonformatting");
+        if (jsonFormatSection == null) throw new IllegalArgumentException("No jsonformatting section");
         for (String jsonFormat : jsonFormatSection.getKeys(false)) {
             int priority = jsonFormatSection.getInt(jsonFormat + ".priority", 0);
             List<JsonAttribute> jsonAttributes = new ArrayList<>();
@@ -40,8 +31,7 @@ public class JsonFormat {
                         String clickText = jsonAttributeSection.getString(attribute + ".click_text", "");
                         jsonAttributes.add(new JsonAttribute(attribute, hoverText, clickAction, clickText));
                     } catch (IllegalArgumentException | NullPointerException exception) {
-                        plugin.getServer().getConsoleSender()
-                                .sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&c - Illegal click_action: " + clickActionText + " in jsonFormat: " + jsonFormat));
+                        plugin.getServer().getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&c - Illegal click_action: " + clickActionText + " in jsonFormat: " + jsonFormat));
                     }
                 }
             }
@@ -55,17 +45,5 @@ public class JsonFormat {
 
     public static JsonFormat getJsonFormat(String name) {
         return jsonFormats.get(name.toLowerCase());
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public List<JsonAttribute> getJsonAttributes() {
-        return jsonAttributes;
     }
 }

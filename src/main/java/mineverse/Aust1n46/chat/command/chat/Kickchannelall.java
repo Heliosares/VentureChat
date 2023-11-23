@@ -8,6 +8,7 @@ import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 public class Kickchannelall extends Command {
     public Kickchannelall() {
@@ -15,7 +16,7 @@ public class Kickchannelall extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String command, String[] args) {
+    public boolean execute(CommandSender sender, @NotNull String command, String[] args) {
         if (sender.hasPermission("venturechat.kickchannelall")) {
             if (args.length < 1) {
                 sender.sendMessage(LocalizedMessage.COMMAND_INVALID_ARGUMENTS.toString().replace("{command}", "/kickchannelall").replace("{args}", "[player]"));

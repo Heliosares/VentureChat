@@ -10,6 +10,7 @@ import mineverse.Aust1n46.chat.utilities.Format;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -22,7 +23,7 @@ public class Reply extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String command, String[] args) {
+    public boolean execute(@NotNull CommandSender sender, @NotNull String command, String[] args) {
         if (!(sender instanceof Player)) {
             plugin.getServer().getConsoleSender().sendMessage(LocalizedMessage.COMMAND_MUST_BE_RUN_BY_PLAYER.toString());
             return true;
@@ -53,61 +54,58 @@ public class Reply extends Command {
                     return true;
                 }
                 StringBuilder msg = new StringBuilder();
-                String echo = "";
-                String send = "";
-                String spy = "";
-                if (args.length > 0) {
-                    for (int r = 0; r < args.length; r++)
-                        msg.append(" ").append(args[r]);
-                    if (mcp.hasFilter()) {
-                        msg = new StringBuilder(Format.FilterChat(msg.toString()));
-                    }
-                    if (mcp.getPlayer().hasPermission("venturechat.color.legacy")) {
-                        msg = new StringBuilder(Format.FormatStringLegacyColor(msg.toString()));
-                    }
-                    if (mcp.getPlayer().hasPermission("venturechat.color")) {
-                        msg = new StringBuilder(Format.FormatStringColor(msg.toString(), mcp.getPlayer().hasPermission("venturechat.color.hex")));
-                    }
-                    if (mcp.getPlayer().hasPermission("venturechat.format")) {
-                        msg = new StringBuilder(Format.FormatString(msg.toString(), mcp.getPlayer().hasPermission("venturechat.format.magic")));
-                    }
+                String echo;
+                String send;
+                String spy;
+                for (String arg : args) msg.append(" ").append(arg);
+                if (mcp.hasFilter()) {
+                    msg = new StringBuilder(Format.FilterChat(msg.toString()));
+                }
+                if (mcp.getPlayer().hasPermission("venturechat.color.legacy")) {
+                    msg = new StringBuilder(Format.FormatStringLegacyColor(msg.toString()));
+                }
+                if (mcp.getPlayer().hasPermission("venturechat.color")) {
+                    msg = new StringBuilder(Format.FormatStringColor(msg.toString(), mcp.getPlayer().hasPermission("venturechat.color.hex")));
+                }
+                if (mcp.getPlayer().hasPermission("venturechat.format")) {
+                    msg = new StringBuilder(Format.FormatString(msg.toString(), mcp.getPlayer().hasPermission("venturechat.format.magic")));
+                }
 
-                    PrivateMessageEvent privateMessageEvent = new PrivateMessageEvent(mcp, player, msg.toString(), true);
-                    plugin.getServer().getPluginManager().callEvent(privateMessageEvent);
-                    if (privateMessageEvent.isCancelled()) {
-                        if (privateMessageEvent.getErrorMessage() != null)
-                            sender.sendMessage(privateMessageEvent.getErrorMessage());
-                        return true;
-                    }
-                    msg = new StringBuilder(privateMessageEvent.getChat());
-
-                    send = Format
-                            .FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcp.getPlayer(), plugin.getConfig().getString("replyformatfrom").replaceAll("sender_", "")));
-                    echo = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcp.getPlayer(), plugin.getConfig().getString("replyformatto").replaceAll("sender_", "")));
-                    spy = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcp.getPlayer(), plugin.getConfig().getString("replyformatspy").replaceAll("sender_", "")));
-
-                    send = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(player.getPlayer(), send.replaceAll("receiver_", ""))) + msg;
-                    echo = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(player.getPlayer(), echo.replaceAll("receiver_", ""))) + msg;
-                    spy = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(player.getPlayer(), spy.replaceAll("receiver_", ""))) + msg;
-
-                    if (!mcp.getPlayer().hasPermission("venturechat.spy.override")) {
-                        for (MineverseChatPlayer p : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
-                            if (p.getName().equals(mcp.getName()) || p.getName().equals(player.getName())) {
-                                continue;
-                            }
-                            if (p.isSpy()) {
-                                p.getPlayer().sendMessage(spy);
-                            }
-                        }
-                    }
-                    player.getPlayer().sendMessage(send);
-                    mcp.getPlayer().sendMessage(echo);
-                    if (player.hasNotifications()) {
-                        Format.playMessageSound(player);
-                    }
-                    player.setReplyPlayer(mcp.getUUID());
+                PrivateMessageEvent privateMessageEvent = new PrivateMessageEvent(mcp, player, msg.toString(), true);
+                plugin.getServer().getPluginManager().callEvent(privateMessageEvent);
+                if (privateMessageEvent.isCancelled()) {
+                    if (privateMessageEvent.getErrorMessage() != null)
+                        sender.sendMessage(privateMessageEvent.getErrorMessage());
                     return true;
                 }
+                msg = new StringBuilder(privateMessageEvent.getChat());
+
+                send = Format
+                        .FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcp.getPlayer(), plugin.getConfig().getString("replyformatfrom").replaceAll("sender_", "")));
+                echo = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcp.getPlayer(), plugin.getConfig().getString("replyformatto").replaceAll("sender_", "")));
+                spy = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcp.getPlayer(), plugin.getConfig().getString("replyformatspy").replaceAll("sender_", "")));
+
+                send = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(player.getPlayer(), send.replaceAll("receiver_", ""))) + msg;
+                echo = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(player.getPlayer(), echo.replaceAll("receiver_", ""))) + msg;
+                spy = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(player.getPlayer(), spy.replaceAll("receiver_", ""))) + msg;
+
+                if (!mcp.getPlayer().hasPermission("venturechat.spy.override")) {
+                    for (MineverseChatPlayer p : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
+                        if (p.getName().equals(mcp.getName()) || p.getName().equals(player.getName())) {
+                            continue;
+                        }
+                        if (p.isSpy()) {
+                            p.getPlayer().sendMessage(spy);
+                        }
+                    }
+                }
+                player.getPlayer().sendMessage(send);
+                mcp.getPlayer().sendMessage(echo);
+                if (player.hasNotifications()) {
+                    Format.playMessageSound(player);
+                }
+                player.setReplyPlayer(mcp.getUUID());
+                return true;
             }
             mcp.getPlayer().sendMessage(LocalizedMessage.NO_PLAYER_TO_REPLY_TO.toString());
             return true;
@@ -120,8 +118,8 @@ public class Reply extends Command {
         ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(byteOutStream);
         StringBuilder msgBuilder = new StringBuilder();
-        for (int r = 0; r < args.length; r++) {
-            msgBuilder.append(" ").append(args[r]);
+        for (String arg : args) {
+            msgBuilder.append(" ").append(arg);
         }
         String msg = msgBuilder.toString();
         if (mcp.hasFilter()) {

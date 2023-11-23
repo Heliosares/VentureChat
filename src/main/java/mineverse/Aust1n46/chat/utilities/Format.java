@@ -19,12 +19,10 @@ import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import static mineverse.Aust1n46.chat.MineverseChat.getInstance;
 
@@ -35,7 +33,7 @@ public class Format {
     public static final int LEGACY_COLOR_CODE_LENGTH = 2;
     public static final int HEX_COLOR_CODE_LENGTH = 14;
     public static final String HEX_COLOR_CODE_PREFIX = "#";
-    public static final char BUKKIT_COLOR_CODE_PREFIX_CHAR = '\u00A7';
+    public static final char BUKKIT_COLOR_CODE_PREFIX_CHAR = '§';
     public static final String BUKKIT_COLOR_CODE_PREFIX = String.valueOf(BUKKIT_COLOR_CODE_PREFIX_CHAR);
     public static final String DEFAULT_COLOR_CODE = BUKKIT_COLOR_CODE_PREFIX + "f";
     public static final String BUKKIT_HEX_COLOR_CODE_PREFIX = "x";
@@ -292,7 +290,7 @@ public class Format {
      */
     public static String FormatStringColor(String string, boolean hex) {
         String allFormated = string;
-        allFormated = LEGACY_CHAT_COLOR_DIGITS_PATTERN.matcher(allFormated).replaceAll("\u00A7$1");
+        allFormated = LEGACY_CHAT_COLOR_DIGITS_PATTERN.matcher(allFormated).replaceAll("§$1");
 
         allFormated = allFormated.replaceAll("&[x]", BUKKIT_COLOR_CODE_PREFIX + "x");
         allFormated = allFormated.replaceAll("&[aA]", BUKKIT_COLOR_CODE_PREFIX + "a");
@@ -318,7 +316,7 @@ public class Format {
     public static String FormatStringLegacyColor(String string) {
         String allFormated = string;
 
-        allFormated = LEGACY_CHAT_COLOR_PATTERN.matcher(allFormated).replaceAll("\u00A7$13");
+        allFormated = LEGACY_CHAT_COLOR_PATTERN.matcher(allFormated).replaceAll("§$13");
         allFormated = allFormated.replaceAll(BUKKIT_COLOR_CODE_PREFIX + "[A]", BUKKIT_COLOR_CODE_PREFIX + "a");
         allFormated = allFormated.replaceAll(BUKKIT_COLOR_CODE_PREFIX + "[B]", BUKKIT_COLOR_CODE_PREFIX + "b");
         allFormated = allFormated.replaceAll(BUKKIT_COLOR_CODE_PREFIX + "[C]", BUKKIT_COLOR_CODE_PREFIX + "c");
@@ -363,7 +361,7 @@ public class Format {
     }
 
     public static String FilterChat(String msg) {
-        int t = 0;
+        int t;
         List<String> filters = getInstance().getConfig().getStringList("filters");
         for (String s : filters) {
             t = 0;
@@ -486,7 +484,6 @@ public class Format {
 
         if (millis >= Format.MILLISECONDS_PER_SECOND) {
             long numberOfSeconds = millis / Format.MILLISECONDS_PER_SECOND;
-            millis -= Format.MILLISECONDS_PER_SECOND * numberOfSeconds;
 
             String units = LocalizedMessage.UNITS_SECOND_PLURAL.toString();
             if (numberOfSeconds == 1) {
@@ -558,7 +555,6 @@ public class Format {
             indexOfSecondToken = timeInput.indexOf("s");
             if (indexOfSecondToken != -1) {
                 int numberOfSeconds = Integer.parseInt(timeInput.substring(0, indexOfSecondToken));
-                timeInput = timeInput.substring(indexOfSecondToken + 1);
                 millis += MILLISECONDS_PER_SECOND * numberOfSeconds;
             }
         }
@@ -595,10 +591,10 @@ public class Format {
     private static String convertPlaceholders(String s, JsonFormat format, MineverseChatPlayer icp) {
         String remaining = s;
         String temp = "";
-        int indexStart = -1;
-        int indexEnd = -1;
-        String placeholder = "";
-        String formattedPlaceholder = "";
+        int indexStart;
+        int indexEnd;
+        String placeholder;
+        String formattedPlaceholder;
         String lastCode = DEFAULT_COLOR_CODE;
         do {
             Matcher matcher = PLACEHOLDERAPI_PLACEHOLDER_PATTERN.matcher(remaining);
@@ -610,10 +606,10 @@ public class Format {
                 temp += convertToJsonColors(escapeJsonChars(lastCode + remaining.substring(0, indexStart))) + ",";
                 lastCode = getLastCode(lastCode + remaining.substring(0, indexStart));
                 boolean placeholderHasJsonAttribute = false;
-                for (JsonAttribute jsonAttribute : format.getJsonAttributes()) {
-                    if (placeholder.contains(jsonAttribute.getName().replace("{", "").replace("}", ""))) {
+                for (JsonAttribute jsonAttribute : format.jsonAttributes()) {
+                    if (placeholder.contains(jsonAttribute.name().replace("{", "").replace("}", ""))) {
                         final StringBuilder hover = new StringBuilder();
-                        for (String st : jsonAttribute.getHoverText()) {
+                        for (String st : jsonAttribute.hoverText()) {
                             hover.append(Format.FormatStringAll(st)).append("\n");
                         }
                         final String hoverText;
@@ -623,14 +619,14 @@ public class Format {
                         } else {
                             hoverText = "";
                         }
-                        final ClickAction clickAction = jsonAttribute.getClickAction();
+                        final ClickAction clickAction = jsonAttribute.clickAction();
                         final String actionJson;
                         if (clickAction == ClickAction.NONE) {
                             actionJson = "";
                         } else {
                             final String clickText = escapeJsonChars(Format.FormatStringAll(
-                                    PlaceholderAPI.setBracketPlaceholders(icp.getPlayer(), jsonAttribute.getClickText())));
-                            actionJson = ",\"clickEvent\":{\"action\":\"" + jsonAttribute.getClickAction().toString() + "\",\"value\":\"" + clickText
+                                    PlaceholderAPI.setBracketPlaceholders(icp.getPlayer(), jsonAttribute.clickText())));
+                            actionJson = ",\"clickEvent\":{\"action\":\"" + jsonAttribute.clickAction().toString() + "\",\"value\":\"" + clickText
                                     + "\"}";
                         }
                         final String hoverJson;
@@ -667,9 +663,9 @@ public class Format {
     private static String convertLinks(String s) {
         String remaining = s;
         String temp = "";
-        int indexLink = -1;
-        int indexLinkEnd = -1;
-        String link = "";
+        int indexLink;
+        int indexLinkEnd;
+        String link;
         String lastCode = DEFAULT_COLOR_CODE;
         do {
             Pattern pattern = Pattern.compile(
@@ -712,16 +708,16 @@ public class Format {
     private static String convertToJsonColors(String s, String extensions) {
         String remaining = s;
         StringBuilder temp = new StringBuilder();
-        int indexColor = -1;
-        int indexNextColor = -1;
+        int indexColor;
+        int indexNextColor;
         String color = "";
-        String modifier = "";
+        String modifier;
         boolean bold = false;
         boolean obfuscated = false;
         boolean italic = false;
         boolean strikethrough = false;
         boolean underlined = false;
-        String previousColor = "";
+        String previousColor;
         int colorLength = LEGACY_COLOR_CODE_LENGTH;
         do {
             if (remaining.length() < LEGACY_COLOR_CODE_LENGTH) {
@@ -810,7 +806,7 @@ public class Format {
             if (indexNextColor == -1) {
                 indexNextColor = remaining.length();
             }
-            temp.append("{\"text\":\"").append(remaining.substring(0, indexNextColor)).append("\",\"color\":\"").append(hexidecimalToJsonColorRGB(color)).append("\"").append(modifier).append(extensions).append("},");
+            temp.append("{\"text\":\"").append(remaining, 0, indexNextColor).append("\",\"color\":\"").append(hexidecimalToJsonColorRGB(color)).append("\"").append(modifier).append(extensions).append("},");
             remaining = remaining.substring(indexNextColor);
         } while (remaining.length() > 1 && indexColor != -1);
         if (temp.length() > 1)
@@ -820,48 +816,24 @@ public class Format {
 
     private static String hexidecimalToJsonColorRGB(String c) {
         if (c.length() == 1) {
-            switch (c) {
-                case "0":
-                    return "black";
-                case "1":
-                    return "dark_blue";
-                case "2":
-                    return "dark_green";
-                case "3":
-                    return "dark_aqua";
-                case "4":
-                    return "dark_red";
-                case "5":
-                    return "dark_purple";
-                case "6":
-                    return "gold";
-                case "7":
-                    return "gray";
-                case "8":
-                    return "dark_gray";
-                case "9":
-                    return "blue";
-                case "a":
-                case "A":
-                    return "green";
-                case "b":
-                case "B":
-                    return "aqua";
-                case "c":
-                case "C":
-                    return "red";
-                case "d":
-                case "D":
-                    return "light_purple";
-                case "e":
-                case "E":
-                    return "yellow";
-                case "f":
-                case "F":
-                    return "white";
-                default:
-                    return "white";
-            }
+            return switch (c) {
+                case "0" -> "black";
+                case "1" -> "dark_blue";
+                case "2" -> "dark_green";
+                case "3" -> "dark_aqua";
+                case "4" -> "dark_red";
+                case "5" -> "dark_purple";
+                case "6" -> "gold";
+                case "7" -> "gray";
+                case "8" -> "dark_gray";
+                case "9" -> "blue";
+                case "a", "A" -> "green";
+                case "b", "B" -> "aqua";
+                case "c", "C" -> "red";
+                case "d", "D" -> "light_purple";
+                case "e", "E" -> "yellow";
+                default -> "white";
+            };
         }
         if (isValidHexColor(c)) {
             return c;
@@ -926,11 +898,12 @@ public class Format {
     }
 
     private static Sound getSound(String soundName) {
-        if (Arrays.asList(Sound.values()).stream().map(Sound::toString).collect(Collectors.toList()).contains(soundName)) {
+        try {
             return Sound.valueOf(soundName);
+        } catch (IllegalArgumentException e) {
+            Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&c - Message sound invalid!"));
+            return getDefaultMessageSound();
         }
-        Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&c - Message sound invalid!"));
-        return getDefaultMessageSound();
     }
 
     private static Sound getDefaultMessageSound() {

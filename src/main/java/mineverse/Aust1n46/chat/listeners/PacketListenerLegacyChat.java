@@ -55,9 +55,6 @@ public class PacketListenerLegacyChat extends PacketAdapter {
         }
         String message = Format.toPlainText(chat.getHandle(), chat.getHandleType());
         String coloredMessage = Format.toColoredText(chat.getHandle(), chat.getHandleType());
-        if (message == null) {
-            return;
-        }
         int hash = message.hashCode();
         mcp.addMessage(new ChatMessage(chat, message, coloredMessage, hash));
     }

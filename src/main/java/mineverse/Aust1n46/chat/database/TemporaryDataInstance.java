@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class TemporaryDataInstance {
-    private static final HashMap<UUID, TemporaryDataInstance> temporaryDataInstances = new HashMap<UUID, TemporaryDataInstance>();
+    private static final HashMap<UUID, TemporaryDataInstance> temporaryDataInstances = new HashMap<>();
     private final UUID uuid;
     private int messagePackets;
 

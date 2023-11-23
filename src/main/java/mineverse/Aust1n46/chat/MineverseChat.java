@@ -33,6 +33,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.*;
@@ -53,9 +54,9 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
     public static ChatChannelInfo ccInfo;
 
     @Deprecated
-    public static Set<MineverseChatPlayer> players = new HashSet<>();
+    public static final Set<MineverseChatPlayer> players = new HashSet<>();
     @Deprecated
-    public static Set<MineverseChatPlayer> onlinePlayers = new HashSet<>();
+    public static final Set<MineverseChatPlayer> onlinePlayers = new HashSet<>();
 
     // Vault
     private static Permission permission = null;
@@ -90,14 +91,11 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
             if (!changes) {
                 out.writeUTF("Receive");
                 out.writeUTF(mcp.getUUID().toString());
-                Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(getInstance(), new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!mcp.isOnline() || mcp.hasPlayed()) {
-                            return;
-                        }
-                        synchronize(mcp, false);
+                Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(getInstance(), () -> {
+                    if (!mcp.isOnline() || mcp.hasPlayed()) {
+                        return;
                     }
+                    synchronize(mcp, false);
                 }, 20L); // one-second delay before running again
             } else {
                 out.writeUTF("Update");
@@ -247,7 +245,7 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
     }
 
     @Override
-    public void onPluginMessageReceived(String channel, Player player, byte[] inputStream) {
+    public void onPluginMessageReceived(String channel, @NotNull Player player, byte[] inputStream) {
         if (!channel.equals(PLUGIN_MESSAGING_CHANNEL)) {
             return;
         }
@@ -288,14 +286,11 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
                     }
                 }
 
-                Bukkit.getServer().getScheduler().runTaskAsynchronously(this, new Runnable() {
-                    @Override
-                    public void run() {
-                        //Create VentureChatEvent
-                        VentureChatEvent ventureChatEvent = new VentureChatEvent(null, senderName, nickname, primaryGroup, chatChannelObject, recipients, recipients.size(), format, chat, globalJSON, hash, false);
-                        //Fire event and wait for other plugin listeners to act on it
-                        Bukkit.getServer().getPluginManager().callEvent(ventureChatEvent);
-                    }
+                Bukkit.getServer().getScheduler().runTaskAsynchronously(this, () -> {
+                    //Create VentureChatEvent
+                    VentureChatEvent ventureChatEvent = new VentureChatEvent(null, senderName, nickname, primaryGroup, chatChannelObject, recipients, recipients.size(), format, chat, globalJSON, hash, false);
+                    //Fire event and wait for other plugin listeners to act on it
+                    Bukkit.getServer().getPluginManager().callEvent(ventureChatEvent);
                 });
 
                 Bukkit.getConsoleSender().sendMessage(consoleChat);
@@ -355,7 +350,7 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
                     String server = msgin.readUTF();
                     String sender = msgin.readUTF();
                     String chatchannel = msgin.readUTF();
-                    List<String> listening = new ArrayList<String>();
+                    List<String> listening = new ArrayList<>();
                     if (ChatChannel.isChannel(chatchannel)) {
                         for (MineverseChatPlayer mcp : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
                             if (mcp.isListening(chatchannel)) {

@@ -5,6 +5,7 @@ import mineverse.Aust1n46.chat.utilities.Format;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 public class Channelinfo extends Command {
     public Channelinfo() {
@@ -12,7 +13,7 @@ public class Channelinfo extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String command, String[] args) {
+    public boolean execute(CommandSender sender, @NotNull String command, String[] args) {
         if (sender.hasPermission("venturechat.channelinfo")) {
             if (args.length < 1) {
                 sender.sendMessage(ChatColor.RED + "Invalid command: /channelinfo [channel]");

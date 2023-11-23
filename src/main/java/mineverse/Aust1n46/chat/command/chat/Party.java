@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import static mineverse.Aust1n46.chat.MineverseChat.LINE_LENGTH;
 
@@ -19,7 +20,7 @@ public class Party extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String command, String[] args) {
+    public boolean execute(@NotNull CommandSender sender, @NotNull String command, String[] args) {
         if (!(sender instanceof Player)) {
             plugin.getServer().getConsoleSender().sendMessage(ChatColor.RED + "This command must be run by a player.");
             return true;
@@ -274,10 +275,10 @@ public class Party extends Command {
                         && !args[0].equals("help") && !args[0].equals("members") && !args[0].equals("ban") && !args[0].equals("unban")) {
                     if (mcp.hasParty()) {
                         StringBuilder msg = new StringBuilder();
-                        String partyformat = "";
-                        for (int x = 0; x < args.length; x++) {
-                            if (!args[x].isEmpty())
-                                msg.append(" ").append(args[x]);
+                        String partyformat;
+                        for (String arg : args) {
+                            if (!arg.isEmpty())
+                                msg.append(" ").append(arg);
                         }
                         if (mcp.hasFilter()) {
                             msg = new StringBuilder(Format.FilterChat(msg.toString()));

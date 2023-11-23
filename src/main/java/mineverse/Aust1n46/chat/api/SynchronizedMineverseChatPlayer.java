@@ -9,7 +9,7 @@ public class SynchronizedMineverseChatPlayer {
     private final Set<String> listening;
     private final HashMap<String, MuteContainer> mutes;
     private final Set<UUID> ignores;
-    private final List<String> messageData = new ArrayList<String>();
+    private final List<String> messageData = new ArrayList<>();
     private int messagePackets;
     private boolean spy;
     private boolean messageToggle;
@@ -28,9 +28,9 @@ public class SynchronizedMineverseChatPlayer {
 
     public SynchronizedMineverseChatPlayer(UUID uuid) {
         this.uuid = uuid;
-        listening = new HashSet<String>();
-        mutes = new HashMap<String, MuteContainer>();
-        ignores = new HashSet<UUID>();
+        listening = new HashSet<>();
+        mutes = new HashMap<>();
+        ignores = new HashSet<>();
         spy = false;
         messageToggle = true;
     }

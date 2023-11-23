@@ -8,6 +8,7 @@ import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class ChannelAlias extends Command {
     private final MineverseChat plugin = MineverseChat.getInstance();
@@ -17,7 +18,7 @@ public class ChannelAlias extends Command {
     }
 
     @Override
-    public boolean execute(final CommandSender sender, final String commandLabel, final String[] args) {
+    public boolean execute(final @NotNull CommandSender sender, final @NotNull String commandLabel, final String[] args) {
         if (!(sender instanceof Player)) {
             plugin.getServer().getConsoleSender().sendMessage(LocalizedMessage.COMMAND_MUST_BE_RUN_BY_PLAYER.toString());
             return true;
@@ -53,9 +54,9 @@ public class ChannelAlias extends Command {
                         MineverseChat.synchronize(mcp, true);
                     }
                     StringBuilder msg = new StringBuilder();
-                    for (int x = 0; x < args.length; x++) {
-                        if (!args[x].isEmpty())
-                            msg.append(" ").append(args[x]);
+                    for (String arg : args) {
+                        if (!arg.isEmpty())
+                            msg.append(" ").append(arg);
                     }
                     mcp.getPlayer().chat(msg.toString());
                     return true;

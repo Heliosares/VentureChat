@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Class for reading and writing player data.
@@ -47,12 +48,12 @@ public class PlayerData {
                 String name = playerData.getConfigurationSection("players." + uuid).getString("name");
                 String currentChannelName = playerData.getConfigurationSection("players." + uuid).getString("current");
                 ChatChannel currentChannel = ChatChannel.isChannel(currentChannelName) ? ChatChannel.getChannel(currentChannelName) : ChatChannel.getDefaultChannel();
-                Set<UUID> ignores = new HashSet<UUID>();
+                Set<UUID> ignores = new HashSet<>();
                 StringTokenizer i = new StringTokenizer(playerData.getConfigurationSection("players." + uuidString).getString("ignores"), ",");
                 while (i.hasMoreTokens()) {
                     ignores.add(UUID.fromString(i.nextToken()));
                 }
-                Set<String> listening = new HashSet<String>();
+                Set<String> listening = new HashSet<>();
                 StringTokenizer l = new StringTokenizer(playerData.getConfigurationSection("players." + uuidString).getString("listen"), ",");
                 while (l.hasMoreTokens()) {
                     String channel = l.nextToken();
@@ -60,7 +61,7 @@ public class PlayerData {
                         listening.add(channel);
                     }
                 }
-                HashMap<String, MuteContainer> mutes = new HashMap<String, MuteContainer>();
+                HashMap<String, MuteContainer> mutes = new HashMap<>();
                 StringTokenizer m = new StringTokenizer(playerData.getConfigurationSection("players." + uuidString).getString("mutes"), ",");
                 while (m.hasMoreTokens()) {
                     String[] parts = m.nextToken().split(":");
@@ -73,7 +74,7 @@ public class PlayerData {
                         mutes.put(channelName, new MuteContainer(channelName, Long.parseLong(parts[1])));
                     }
                 }
-                Set<String> blockedCommands = new HashSet<String>();
+                Set<String> blockedCommands = new HashSet<>();
                 StringTokenizer b = new StringTokenizer(playerData.getConfigurationSection("players." + uuidString).getString("blockedcommands"), ",");
                 while (b.hasMoreTokens()) {
                     blockedCommands.add(b.nextToken());
@@ -104,14 +105,12 @@ public class PlayerData {
     }
 
     public static void loadPlayerData() {
-        try {
-            File playerDataDirectory = new File(PLAYER_DATA_DIRECTORY_PATH);
-            if (!playerDataDirectory.exists()) {
-                playerDataDirectory.mkdirs();
-            }
-            Files.walk(Paths.get(PLAYER_DATA_DIRECTORY_PATH))
-                    .filter(Files::isRegularFile)
-                    .forEach((path) -> readPlayerDataFile(path));
+        File playerDataDirectory = new File(PLAYER_DATA_DIRECTORY_PATH);
+        if (!playerDataDirectory.exists()) {
+            playerDataDirectory.mkdirs();
+        }
+        try (Stream<Path> pathStream = Files.walk(Paths.get(PLAYER_DATA_DIRECTORY_PATH))) {
+            pathStream.filter(Files::isRegularFile).forEach(PlayerData::readPlayerDataFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -208,12 +207,12 @@ public class PlayerData {
             String name = playerDataFileYamlConfiguration.getString("name");
             String currentChannelName = playerDataFileYamlConfiguration.getString("current");
             ChatChannel currentChannel = ChatChannel.isChannel(currentChannelName) ? ChatChannel.getChannel(currentChannelName) : ChatChannel.getDefaultChannel();
-            Set<UUID> ignores = new HashSet<UUID>();
+            Set<UUID> ignores = new HashSet<>();
             StringTokenizer i = new StringTokenizer(playerDataFileYamlConfiguration.getString("ignores"), ",");
             while (i.hasMoreTokens()) {
                 ignores.add(UUID.fromString(i.nextToken()));
             }
-            Set<String> listening = new HashSet<String>();
+            Set<String> listening = new HashSet<>();
             StringTokenizer l = new StringTokenizer(playerDataFileYamlConfiguration.getString("listen"), ",");
             while (l.hasMoreTokens()) {
                 String channel = l.nextToken();
@@ -221,14 +220,14 @@ public class PlayerData {
                     listening.add(channel);
                 }
             }
-            HashMap<String, MuteContainer> mutes = new HashMap<String, MuteContainer>();
+            HashMap<String, MuteContainer> mutes = new HashMap<>();
             ConfigurationSection muteSection = playerDataFileYamlConfiguration.getConfigurationSection("mutes");
             for (String channelName : muteSection.getKeys(false)) {
                 ConfigurationSection channelSection = muteSection.getConfigurationSection(channelName);
                 mutes.put(channelName, new MuteContainer(channelName, channelSection.getLong("time"), channelSection.getString("reason")));
             }
 
-            Set<String> blockedCommands = new HashSet<String>();
+            Set<String> blockedCommands = new HashSet<>();
             StringTokenizer b = new StringTokenizer(playerDataFileYamlConfiguration.getString("blockedcommands"), ",");
             while (b.hasMoreTokens()) {
                 blockedCommands.add(b.nextToken());
@@ -250,9 +249,7 @@ public class PlayerData {
             playerDataFile.delete();
             return;
         }
-        if (mcp != null) {
-            MineverseChatAPI.addMineverseChatPlayerToMap(mcp);
-            MineverseChatAPI.addNameToMap(mcp);
-        }
+        MineverseChatAPI.addMineverseChatPlayerToMap(mcp);
+        MineverseChatAPI.addNameToMap(mcp);
     }
 }
