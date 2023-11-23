@@ -1,12 +1,11 @@
 package mineverse.Aust1n46.chat.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import mineverse.Aust1n46.chat.MineverseChat;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
-import mineverse.Aust1n46.chat.MineverseChat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GuiSlot {
     private static final MineverseChat plugin = MineverseChat.getInstance();
@@ -49,6 +48,10 @@ public class GuiSlot {
         return guiSlots;
     }
 
+    public boolean hasPermission() {
+        return !permission.equalsIgnoreCase("venturechat.none");
+    }
+
     public String getText() {
         return text;
     }
@@ -75,9 +78,5 @@ public class GuiSlot {
 
     public int getSlot() {
         return slot;
-    }
-
-    public boolean hasPermission() {
-        return !permission.equalsIgnoreCase("venturechat.none");
     }
 }

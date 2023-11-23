@@ -1,14 +1,9 @@
 package mineverse.Aust1n46.chat.api;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-
+import mineverse.Aust1n46.chat.MineverseChat;
 import org.bukkit.entity.Player;
 
-import mineverse.Aust1n46.chat.MineverseChat;
+import java.util.*;
 
 /**
  * API class for looking up wrapped {@link MineverseChatPlayer} objects from

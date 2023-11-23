@@ -23,20 +23,20 @@ public class MuteContainer {
         this.duration = duration;
     }
 
-    public String getChannel() {
-        return channel;
-    }
-
     public boolean hasReason() {
         return !reason.equals("");
     }
 
-    public String getReason() {
-        return reason;
-    }
-
     public boolean hasDuration() {
         return duration > 0;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public String getReason() {
+        return reason;
     }
 
     public long getDuration() {

@@ -1,12 +1,11 @@
 package mineverse.Aust1n46.chat;
 
-import org.bukkit.entity.Player;
-
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import mineverse.Aust1n46.chat.api.MineverseChatAPI;
 import mineverse.Aust1n46.chat.api.MineverseChatPlayer;
 import mineverse.Aust1n46.chat.channel.ChatChannel;
+import org.bukkit.entity.Player;
 
 public class VentureChatPlaceholders extends PlaceholderExpansion {
     @Override
@@ -45,7 +44,7 @@ public class VentureChatPlaceholders extends PlaceholderExpansion {
                 case "channel_distance":
                     return currentChannel.getDistance() + "";
                 case "channel_prefix":
-                	return currentChannel.getPrefix();
+                    return currentChannel.getPrefix();
             }
         }
         return null;

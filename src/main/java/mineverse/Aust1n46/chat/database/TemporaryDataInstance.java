@@ -4,10 +4,9 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class TemporaryDataInstance {
-    private int messagePackets;
-    private final UUID uuid;
-
     private static final HashMap<UUID, TemporaryDataInstance> temporaryDataInstances = new HashMap<UUID, TemporaryDataInstance>();
+    private final UUID uuid;
+    private int messagePackets;
 
     private TemporaryDataInstance(UUID uuid) {
         this.uuid = uuid;
@@ -23,15 +22,15 @@ public class TemporaryDataInstance {
         return temporaryDataInstances.get(uuid);
     }
 
-    public int getMessagePackets() {
-        return this.messagePackets;
-    }
-
     public void incrementMessagePackets() {
         this.messagePackets++;
     }
 
     public void destroyInstance() {
         temporaryDataInstances.remove(uuid);
+    }
+
+    public int getMessagePackets() {
+        return this.messagePackets;
     }
 }

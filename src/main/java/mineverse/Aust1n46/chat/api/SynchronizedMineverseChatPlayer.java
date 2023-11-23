@@ -1,22 +1,16 @@
 package mineverse.Aust1n46.chat.api;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
 import mineverse.Aust1n46.chat.command.mute.MuteContainer;
+
+import java.util.*;
 
 public class SynchronizedMineverseChatPlayer {
     private final UUID uuid;
     private final Set<String> listening;
     private final HashMap<String, MuteContainer> mutes;
     private final Set<UUID> ignores;
-    private int messagePackets;
     private final List<String> messageData = new ArrayList<String>();
+    private int messagePackets;
     private boolean spy;
     private boolean messageToggle;
 
@@ -41,20 +35,12 @@ public class SynchronizedMineverseChatPlayer {
         messageToggle = true;
     }
 
-    public List<String> getMessageData() {
-        return this.messageData;
-    }
-
     public void addData(String s) {
         this.messageData.add(s);
     }
 
     public void clearMessageData() {
         this.messageData.clear();
-    }
-
-    public int getMessagePackets() {
-        return this.messagePackets;
     }
 
     public void incrementMessagePackets() {
@@ -73,10 +59,6 @@ public class SynchronizedMineverseChatPlayer {
         this.ignores.remove(smcp.getUUID());
     }
 
-    public Set<UUID> getIgnores() {
-        return this.ignores;
-    }
-
     public void addMute(String channel, long time, String reason) {
         mutes.put(channel, new MuteContainer(channel, time, reason));
     }
@@ -85,16 +67,28 @@ public class SynchronizedMineverseChatPlayer {
         this.mutes.clear();
     }
 
-    public Collection<MuteContainer> getMutes() {
-        return this.mutes.values();
-    }
-
     public void addListening(String channel) {
         this.listening.add(channel);
     }
 
     public void removeListening(String channel) {
         this.listening.remove(channel);
+    }
+
+    public List<String> getMessageData() {
+        return this.messageData;
+    }
+
+    public int getMessagePackets() {
+        return this.messagePackets;
+    }
+
+    public Set<UUID> getIgnores() {
+        return this.ignores;
+    }
+
+    public Collection<MuteContainer> getMutes() {
+        return this.mutes.values();
     }
 
     public Set<String> getListening() {

@@ -1,23 +1,5 @@
 package mineverse.Aust1n46.chat.database;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.StringTokenizer;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 import mineverse.Aust1n46.chat.MineverseChat;
 import mineverse.Aust1n46.chat.api.MineverseChatAPI;
 import mineverse.Aust1n46.chat.api.MineverseChatPlayer;
@@ -25,6 +7,18 @@ import mineverse.Aust1n46.chat.channel.ChatChannel;
 import mineverse.Aust1n46.chat.command.mute.MuteContainer;
 import mineverse.Aust1n46.chat.utilities.Format;
 import mineverse.Aust1n46.chat.utilities.UUIDFetcher;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Class for reading and writing player data.
@@ -123,6 +117,73 @@ public class PlayerData {
         }
     }
 
+    public static void savePlayerData(MineverseChatPlayer mcp) {
+        if (mcp == null || UUIDFetcher.shouldSkipOfflineUUID(mcp.getUUID()) || (!mcp.isOnline() && !mcp.wasModified())) {
+            return;
+        }
+        try {
+            File playerDataFile = new File(PLAYER_DATA_DIRECTORY_PATH, mcp.getUUID() + ".yml");
+            FileConfiguration playerDataFileYamlConfiguration = YamlConfiguration.loadConfiguration(playerDataFile);
+            if (!playerDataFile.exists()) {
+                playerDataFileYamlConfiguration.save(playerDataFile);
+            }
+
+            playerDataFileYamlConfiguration.set("name", mcp.getName());
+            playerDataFileYamlConfiguration.set("current", mcp.getCurrentChannel().getName());
+            String ignores = "";
+            for (UUID s : mcp.getIgnores()) {
+                ignores += s.toString() + ",";
+            }
+            playerDataFileYamlConfiguration.set("ignores", ignores);
+            String listening = "";
+            for (String channel : mcp.getListening()) {
+                ChatChannel c = ChatChannel.getChannel(channel);
+                listening += c.getName() + ",";
+            }
+            String blockedCommands = "";
+            for (String s : mcp.getBlockedCommands()) {
+                blockedCommands += s + ",";
+            }
+            if (!listening.isEmpty()) {
+                listening = listening.substring(0, listening.length() - 1);
+            }
+            playerDataFileYamlConfiguration.set("listen", listening);
+
+            ConfigurationSection muteSection = playerDataFileYamlConfiguration.createSection("mutes");
+            for (MuteContainer mute : mcp.getMutes()) {
+                ConfigurationSection channelSection = muteSection.createSection(mute.getChannel());
+                channelSection.set("time", mute.getDuration());
+                channelSection.set("reason", mute.getReason());
+            }
+
+            playerDataFileYamlConfiguration.set("blockedcommands", blockedCommands);
+            playerDataFileYamlConfiguration.set("host", mcp.isHost());
+            playerDataFileYamlConfiguration.set("party", mcp.hasParty() ? mcp.getParty().toString() : "");
+            playerDataFileYamlConfiguration.set("filter", mcp.hasFilter());
+            playerDataFileYamlConfiguration.set("notifications", mcp.hasNotifications());
+            playerDataFileYamlConfiguration.set("spy", mcp.isSpy());
+            playerDataFileYamlConfiguration.set("commandspy", mcp.hasCommandSpy());
+            playerDataFileYamlConfiguration.set("rangedspy", mcp.getRangedSpy());
+            playerDataFileYamlConfiguration.set("messagetoggle", mcp.getMessageToggle());
+            playerDataFileYamlConfiguration.set("bungeetoggle", mcp.getBungeeToggle());
+            Calendar currentDate = Calendar.getInstance();
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MMM/dd HH:mm:ss");
+            String dateNow = formatter.format(currentDate.getTime());
+            playerDataFileYamlConfiguration.set("date", dateNow);
+            mcp.setModified(false);
+
+            playerDataFileYamlConfiguration.save(playerDataFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void savePlayerData() {
+        for (MineverseChatPlayer p : MineverseChatAPI.getMineverseChatPlayers()) {
+            savePlayerData(p);
+        }
+    }
+
     /**
      * Loads the player data file for a specific player. Corrupt/invalid data files are skipped and deleted.
      *
@@ -192,73 +253,6 @@ public class PlayerData {
         if (mcp != null) {
             MineverseChatAPI.addMineverseChatPlayerToMap(mcp);
             MineverseChatAPI.addNameToMap(mcp);
-        }
-    }
-
-    public static void savePlayerData(MineverseChatPlayer mcp) {
-        if (mcp == null || UUIDFetcher.shouldSkipOfflineUUID(mcp.getUUID()) || (!mcp.isOnline() && !mcp.wasModified())) {
-            return;
-        }
-        try {
-            File playerDataFile = new File(PLAYER_DATA_DIRECTORY_PATH, mcp.getUUID() + ".yml");
-            FileConfiguration playerDataFileYamlConfiguration = YamlConfiguration.loadConfiguration(playerDataFile);
-            if (!playerDataFile.exists()) {
-                playerDataFileYamlConfiguration.save(playerDataFile);
-            }
-
-            playerDataFileYamlConfiguration.set("name", mcp.getName());
-            playerDataFileYamlConfiguration.set("current", mcp.getCurrentChannel().getName());
-            String ignores = "";
-            for (UUID s : mcp.getIgnores()) {
-                ignores += s.toString() + ",";
-            }
-            playerDataFileYamlConfiguration.set("ignores", ignores);
-            String listening = "";
-            for (String channel : mcp.getListening()) {
-                ChatChannel c = ChatChannel.getChannel(channel);
-                listening += c.getName() + ",";
-            }
-            String blockedCommands = "";
-            for (String s : mcp.getBlockedCommands()) {
-                blockedCommands += s + ",";
-            }
-            if (!listening.isEmpty()) {
-                listening = listening.substring(0, listening.length() - 1);
-            }
-            playerDataFileYamlConfiguration.set("listen", listening);
-
-            ConfigurationSection muteSection = playerDataFileYamlConfiguration.createSection("mutes");
-            for (MuteContainer mute : mcp.getMutes()) {
-                ConfigurationSection channelSection = muteSection.createSection(mute.getChannel());
-                channelSection.set("time", mute.getDuration());
-                channelSection.set("reason", mute.getReason());
-            }
-
-            playerDataFileYamlConfiguration.set("blockedcommands", blockedCommands);
-            playerDataFileYamlConfiguration.set("host", mcp.isHost());
-            playerDataFileYamlConfiguration.set("party", mcp.hasParty() ? mcp.getParty().toString() : "");
-            playerDataFileYamlConfiguration.set("filter", mcp.hasFilter());
-            playerDataFileYamlConfiguration.set("notifications", mcp.hasNotifications());
-            playerDataFileYamlConfiguration.set("spy", mcp.isSpy());
-            playerDataFileYamlConfiguration.set("commandspy", mcp.hasCommandSpy());
-            playerDataFileYamlConfiguration.set("rangedspy", mcp.getRangedSpy());
-            playerDataFileYamlConfiguration.set("messagetoggle", mcp.getMessageToggle());
-            playerDataFileYamlConfiguration.set("bungeetoggle", mcp.getBungeeToggle());
-            Calendar currentDate = Calendar.getInstance();
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MMM/dd HH:mm:ss");
-            String dateNow = formatter.format(currentDate.getTime());
-            playerDataFileYamlConfiguration.set("date", dateNow);
-            mcp.setModified(false);
-
-            playerDataFileYamlConfiguration.save(playerDataFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void savePlayerData() {
-        for (MineverseChatPlayer p : MineverseChatAPI.getMineverseChatPlayers()) {
-            savePlayerData(p);
         }
     }
 }

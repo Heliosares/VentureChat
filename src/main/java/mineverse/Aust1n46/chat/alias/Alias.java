@@ -1,11 +1,10 @@
 package mineverse.Aust1n46.chat.alias;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import mineverse.Aust1n46.chat.MineverseChat;
 import org.bukkit.configuration.ConfigurationSection;
 
-import mineverse.Aust1n46.chat.MineverseChat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Alias {
     private static final MineverseChat plugin = MineverseChat.getInstance();
@@ -39,6 +38,10 @@ public class Alias {
         return aliases;
     }
 
+    public boolean hasPermission() {
+        return !permission.equalsIgnoreCase("venturechat.none");
+    }
+
     public String getName() {
         return name;
     }
@@ -53,9 +56,5 @@ public class Alias {
 
     public String getPermission() {
         return permission;
-    }
-
-    public boolean hasPermission() {
-        return !permission.equalsIgnoreCase("venturechat.none");
     }
 }

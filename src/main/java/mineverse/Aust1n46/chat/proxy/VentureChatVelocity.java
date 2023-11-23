@@ -39,16 +39,14 @@ import java.util.stream.Collectors;
  * @author Aust1n46
  */
 public class VentureChatVelocity implements VentureChatProxySource {
+    private static Configuration velocityConfig;
     private final ProxyServer proxyServer;
     private final ChannelIdentifier channelIdentifier = MinecraftChannelIdentifier.create(VentureChatProxy.PLUGIN_MESSAGING_CHANNEL_NAMESPACE, VentureChatProxy.PLUGIN_MESSAGING_CHANNEL_NAME);
     private final Logger logger;
-
     @Inject
     @DataDirectory
     private Path dataPath;
     private File velocityPlayerDataDirectory;
-
-    private static Configuration velocityConfig;
 
     @Inject
     public VentureChatVelocity(ProxyServer server, Logger logger) {
@@ -102,27 +100,6 @@ public class VentureChatVelocity implements VentureChatProxySource {
                 .schedule();
     }
 
-    private void updatePlayerNames() {
-        try {
-            ByteArrayOutputStream outstream = new ByteArrayOutputStream();
-            DataOutputStream out = new DataOutputStream(outstream);
-            out.writeUTF("PlayerNames");
-            out.writeInt(proxyServer.getPlayerCount());
-            for (Player player : proxyServer.getAllPlayers()) {
-                out.writeUTF(player.getUsername());
-            }
-            getServers().forEach(send -> {
-                if (!send.isEmpty()) {
-                    sendPluginMessage(send.getName(), outstream.toByteArray());
-                }
-            });
-        } catch (IllegalStateException e) {
-            sendConsoleMessage("Velocity being finicky with DisconnectEvent.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Subscribe
     public void onPluginMessage(PluginMessageEvent event) {
         String channelIdentifierId = event.getIdentifier().getId();
@@ -144,11 +121,6 @@ public class VentureChatVelocity implements VentureChatProxySource {
     }
 
     @Override
-    public List<VentureChatProxyServer> getServers() {
-        return proxyServer.getAllServers().stream().map(velocityServer -> new VentureChatProxyServer(velocityServer.getServerInfo().getName(), velocityServer.getPlayersConnected().isEmpty())).collect(Collectors.toList());
-    }
-
-    @Override
     public VentureChatProxyServer getServer(String serverName) {
         RegisteredServer server = proxyServer.getServer(serverName).orElse(null);
         if (server == null) return null;
@@ -158,6 +130,32 @@ public class VentureChatVelocity implements VentureChatProxySource {
     @Override
     public void sendConsoleMessage(String message) {
         logger.info(Format.stripColor(message));
+    }
+
+    private void updatePlayerNames() {
+        try {
+            ByteArrayOutputStream outstream = new ByteArrayOutputStream();
+            DataOutputStream out = new DataOutputStream(outstream);
+            out.writeUTF("PlayerNames");
+            out.writeInt(proxyServer.getPlayerCount());
+            for (Player player : proxyServer.getAllPlayers()) {
+                out.writeUTF(player.getUsername());
+            }
+            getServers().forEach(send -> {
+                if (!send.isEmpty()) {
+                    sendPluginMessage(send.getName(), outstream.toByteArray());
+                }
+            });
+        } catch (IllegalStateException e) {
+            sendConsoleMessage("Velocity being finicky with DisconnectEvent.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<VentureChatProxyServer> getServers() {
+        return proxyServer.getAllServers().stream().map(velocityServer -> new VentureChatProxyServer(velocityServer.getServerInfo().getName(), velocityServer.getPlayersConnected().isEmpty())).collect(Collectors.toList());
     }
 
     @Override
