@@ -1,14 +1,20 @@
 package mineverse.Aust1n46.chat.api;
 
+import dev.heliosares.sync.SyncAPI;
 import mineverse.Aust1n46.chat.ChatMessage;
 import mineverse.Aust1n46.chat.channel.ChatChannel;
 import mineverse.Aust1n46.chat.command.mute.MuteContainer;
 import mineverse.Aust1n46.chat.json.JsonFormat;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.metadata.MetadataValue;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Wrapper for {@link Player}
@@ -16,6 +22,7 @@ import java.util.*;
  * @author Aust1n46
  */
 public class MineverseChatPlayer {
+    private static final String SYNC_VAR_PREFIX = "venturechat:";
     private final UUID uuid;
     private final Set<UUID> ignores;
     private final Set<String> listening;
@@ -489,7 +496,8 @@ public class MineverseChatPlayer {
                 return false;
             }
         }
-        return this.spy;
+        Boolean spy = SyncAPI.getPlayer(uuid).getCustomBoolean(SYNC_VAR_PREFIX + "spy");
+        return spy == null ? false;
     }
 
     public void setSpy(boolean spy) {
@@ -541,11 +549,10 @@ public class MineverseChatPlayer {
     }
 
     public boolean isVanished() {
-        if (!online) return vanished;
-        return getPlayer().getMetadata("vanished").stream().anyMatch(MetadataValue::asBoolean);
+        return SyncAPI.getPlayer(uuid).isVanished();
     }
 
     public void setVanished(boolean vanished) {
-        this.vanished = vanished;
+        //this.vanished = vanished;
     }
 }
