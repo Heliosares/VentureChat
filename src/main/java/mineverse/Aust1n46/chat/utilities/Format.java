@@ -10,7 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -46,14 +45,14 @@ public class Format {
 	private static final Pattern LEGACY_CHAT_COLOR_DIGITS_PATTERN = Pattern.compile("&([0-9])");
 	private static final Pattern LEGACY_CHAT_COLOR_PATTERN = Pattern.compile(
 			"(?<!(&x(&[a-fA-F0-9]){5}))(?<!(&x(&[a-fA-F0-9]){4}))(?<!(&x(&[a-fA-F0-9]){3}))(?<!(&x(&[a-fA-F0-9]){2}))(?<!(&x(&[a-fA-F0-9]){1}))(?<!(&x))(&)([0-9a-fA-F])");
-	
+
 	private static final Pattern PLACEHOLDERAPI_PLACEHOLDER_PATTERN = Pattern.compile("\\{([^\\{\\}]+)\\}");
-	
+
 	public static final long MILLISECONDS_PER_DAY = 86400000;
 	public static final long MILLISECONDS_PER_HOUR = 3600000;
 	public static final long MILLISECONDS_PER_MINUTE = 60000;
 	public static final long MILLISECONDS_PER_SECOND = 1000;
-	
+
 	public static final String DEFAULT_MESSAGE_SOUND = "ENTITY_PLAYER_LEVELUP";
 	public static final String DEFAULT_LEGACY_MESSAGE_SOUND = "LEVEL_UP";
 
@@ -90,9 +89,6 @@ public class Format {
      *
      * @param s
      * @param format
-     * @param prefix
-     * @param nickname
-     * @param suffix
      * @param icp
      * @return {@link String}
      */
@@ -118,19 +114,19 @@ public class Format {
 					if (placeholder.contains(jsonAttribute.getName().replace("{", "").replace("}", ""))) {
 						final StringBuilder hover = new StringBuilder();
 						for (String st : jsonAttribute.getHoverText()) {
-							hover.append(Format.FormatStringAll(st) + "\n");
+							hover.append(Format.FormatStringAll(st)).append("\n");
 						}
 						final String hoverText;
 						if(!hover.isEmpty()) {
 							hoverText = escapeJsonChars(Format.FormatStringAll(
 									PlaceholderAPI.setBracketPlaceholders(icp.getPlayer(), hover.substring(0, hover.length() - 1))));
 						} else {
-							hoverText = StringUtils.EMPTY;
+							hoverText = "";
 						}
 						final ClickAction clickAction = jsonAttribute.getClickAction();
 						final String actionJson;
 						if (clickAction == ClickAction.NONE) {
-							actionJson = StringUtils.EMPTY;
+							actionJson =  "";
 						} else {
 							final String clickText = escapeJsonChars(Format.FormatStringAll(
 									PlaceholderAPI.setBracketPlaceholders(icp.getPlayer(), jsonAttribute.getClickText())));
@@ -139,7 +135,7 @@ public class Format {
 						}
 						final String hoverJson;
 						if (hoverText.isEmpty()) {
-							hoverJson = StringUtils.EMPTY;
+							hoverJson =  "";
 						} else {
 							hoverJson = ",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":["
 									+ convertToJsonColors(hoverText) + "]}}";
@@ -426,7 +422,7 @@ public class Format {
 			return "[" + convertToJsonColors(DEFAULT_COLOR_CODE + s) + "]";
 		}
 	}
-	
+
 	private static String escapeJsonChars(String s) {
 		return s.replace("\\", "\\\\").replace("\"", "\\\"");
 	}
@@ -446,62 +442,17 @@ public class Format {
 		return json;
 	}
 
-	public static PacketContainer createPacketPlayOutChat(String json) {
-		final PacketContainer container;
-		if (VersionHandler.isAbove_1_19()) {
-			container = new PacketContainer(PacketType.Play.Server.SYSTEM_CHAT);
-			container.getStrings().write(0, json);
-			container.getBooleans().write(0, false);
-		} else if (VersionHandler.isUnder_1_19()) {
-			WrappedChatComponent component = WrappedChatComponent.fromJson(json);
-			container = new PacketContainer(PacketType.Play.Server.CHAT);
-			container.getModifier().writeDefaults();
-			container.getChatComponents().write(0, component);
-		} else {
-			container = new PacketContainer(PacketType.Play.Server.SYSTEM_CHAT);
-			container.getStrings().write(0, json);
-			container.getIntegers().write(0, 1);
-		}
-		return container;
-	}
-
-	public static PacketContainer createPacketPlayOutChat(WrappedChatComponent component) {
-		final PacketContainer container;
-		if (VersionHandler.isAbove_1_19()) {
-			container = new PacketContainer(PacketType.Play.Server.SYSTEM_CHAT);
-			container.getStrings().write(0, component.getJson());
-			container.getBooleans().write(0, false);
-		} else if (VersionHandler.isUnder_1_19()) {
-			container = new PacketContainer(PacketType.Play.Server.CHAT);
-			container.getModifier().writeDefaults();
-			container.getChatComponents().write(0, component);
-		} else {
-			container = new PacketContainer(PacketType.Play.Server.SYSTEM_CHAT);
-			container.getStrings().write(0, component.getJson());
-			container.getIntegers().write(0, 1);
-		}
-		return container;
-	}
-
-	public static void sendPacketPlayOutChat(Player player, PacketContainer packet) {
-		try {
-			ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
 	@SuppressWarnings("unchecked")
 	public static String toColoredText(Object o, Class<?> c) {
 		if (VersionHandler.is1_7()) {
 			return "\"extra\":[{\"text\":\"Hover to see original message is not currently supported in 1.7\",\"color\":\"red\"}]";
-		} 
+		}
 		List<Object> finalList = new ArrayList<>();
 		StringBuilder stringbuilder = new StringBuilder();
 		stringbuilder.append("\"extra\":[");
 		try {
 			splitComponents(finalList, o, c);
-			for (Object component : finalList) {		
+			for (Object component : finalList) {
 				try {
 					if (VersionHandler.is1_8() || VersionHandler.is1_9() || VersionHandler.is1_10() || VersionHandler.is1_11() || VersionHandler.is1_12() || VersionHandler.is1_13() || VersionHandler.is1_14() || VersionHandler.is1_15() || VersionHandler.is1_16() || VersionHandler.is1_17()) {
 						String text = (String) component.getClass().getMethod("getText").invoke(component);
@@ -786,20 +737,20 @@ public class Format {
 	public static boolean underlineURLs() {
 		return getInstance().getConfig().getBoolean("underlineurls", true);
 	}
-	
+
 	public static String parseTimeStringFromMillis(long millis) {
 		String timeString = "";
 		if(millis >= Format.MILLISECONDS_PER_DAY) {
 			long numberOfDays = millis / Format.MILLISECONDS_PER_DAY;
 			millis -= Format.MILLISECONDS_PER_DAY * numberOfDays;
-			
+
 			String units = LocalizedMessage.UNITS_DAY_PLURAL.toString();
 			if (numberOfDays == 1) {
 				units = LocalizedMessage.UNITS_DAY_SINGULAR.toString();
 			}
 			timeString += numberOfDays + " " + units + " ";
 		}
-		
+
 		if(millis >= Format.MILLISECONDS_PER_HOUR) {
 			long numberOfHours = millis / Format.MILLISECONDS_PER_HOUR;
 			millis -= Format.MILLISECONDS_PER_HOUR * numberOfHours;
@@ -810,7 +761,7 @@ public class Format {
 			}
 			timeString += numberOfHours + " " + units + " ";
 		}
-		
+
 		if(millis >= Format.MILLISECONDS_PER_MINUTE) {
 			long numberOfMinutes = millis / Format.MILLISECONDS_PER_MINUTE;
 			millis -= Format.MILLISECONDS_PER_MINUTE * numberOfMinutes;
@@ -821,7 +772,7 @@ public class Format {
 			}
 			timeString += numberOfMinutes + " " + units + " ";
 		}
-		
+
 		if(millis >= Format.MILLISECONDS_PER_SECOND) {
 			long numberOfSeconds = millis / Format.MILLISECONDS_PER_SECOND;
 			millis -= Format.MILLISECONDS_PER_SECOND * numberOfSeconds;
@@ -834,7 +785,7 @@ public class Format {
 		}
 		return timeString.trim();
 	}
-	
+
 	public static long parseTimeStringToMillis(String timeInput) {
 		long millis = 0L;
 		timeInput = timeInput.toLowerCase();
@@ -842,7 +793,7 @@ public class Format {
 		if(containsInvalidChars(validChars, timeInput)) {
 			return -1;
 		}
-		
+
 		long countDayTokens = timeInput.chars().filter(ch -> ch == 'd').count();
 		long countHourTokens = timeInput.chars().filter(ch -> ch == 'h').count();
 		long countMinuteTokens = timeInput.chars().filter(ch -> ch == 'm').count();
@@ -850,7 +801,7 @@ public class Format {
 		if(countDayTokens > 1 || countHourTokens > 1 || countMinuteTokens > 1 || countSecondTokens > 1) {
 			return -1;
 		}
-		
+
 		int indexOfSecondToken = timeInput.indexOf("s");
 		int indexOfMinuteToken = timeInput.indexOf("m");
 		int indexOfHourToken = timeInput.indexOf("h");
@@ -870,7 +821,7 @@ public class Format {
 				return -1;
 			}
 		}
-		
+
 		if(indexOfDayToken != -1) {
 			int numberOfDays = Integer.parseInt(timeInput.substring(0, indexOfDayToken));
 			timeInput = timeInput.substring(indexOfDayToken + 1);
@@ -902,7 +853,7 @@ public class Format {
 		}
 		return millis;
 	}
-	
+
 	private static boolean containsInvalidChars(char[] validChars, String validate) {
 		for(char c : validate.toCharArray()) {
 			boolean isValidChar = false;
@@ -917,13 +868,13 @@ public class Format {
 		}
 		return false;
 	}
-	
+
 	public static void broadcastToServer(String message) {
 		for(MineverseChatPlayer mcp : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
 			mcp.getPlayer().sendMessage(message);
 		}
 	}
-	
+
 	public static void playMessageSound(MineverseChatPlayer mcp) {
 		Player player = mcp.getPlayer();
 		String soundName = getInstance().getConfig().getString("message_sound", DEFAULT_MESSAGE_SOUND);
@@ -932,7 +883,7 @@ public class Format {
 			player.playSound(player.getLocation(), messageSound, 1, 0);
 		}
 	}
-	
+
 	private static Sound getSound(String soundName) {
 		if(Arrays.asList(Sound.values()).stream().map(Sound::toString).collect(Collectors.toList()).contains(soundName)) {
 			return Sound.valueOf(soundName);
@@ -940,7 +891,7 @@ public class Format {
 		Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&c - Message sound invalid!"));
 		return getDefaultMessageSound();
 	}
-	
+
 	private static Sound getDefaultMessageSound() {
 		if(VersionHandler.is1_7() || VersionHandler.is1_8()) {
 			return Sound.valueOf(DEFAULT_LEGACY_MESSAGE_SOUND);
@@ -949,7 +900,7 @@ public class Format {
 			return Sound.valueOf(DEFAULT_MESSAGE_SOUND);
 		}
 	}
-	
+
 	public static String stripColor(String message) {
 		return message.replaceAll("(\u00A7([a-z0-9]))", "");
 	}

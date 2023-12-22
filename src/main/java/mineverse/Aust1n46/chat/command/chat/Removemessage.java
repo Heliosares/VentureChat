@@ -26,7 +26,7 @@ import mineverse.Aust1n46.chat.utilities.Format;
 
 public class Removemessage extends Command {
 	private MineverseChat plugin = MineverseChat.getInstance();
-	private PacketContainer emptyLinePacketContainer = Format.createPacketPlayOutChat("{\"extra\":[\" \"],\"text\":\"\"}");
+//	private PacketContainer emptyLinePacketContainer = Format.createPacketPlayOutChat("{\"extra\":[\" \"],\"text\":\"\"}");
 	private WrappedChatComponent messageDeletedComponentPlayer = WrappedChatComponent.fromJson(
 			"{\"text\":\"\",\"extra\":[{\"text\":\"\",\"extra\":[" + Format.convertToJsonColors(Format.FormatStringAll(plugin.getConfig().getString("messageremovertext")))
 					+ "],\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":["
@@ -71,7 +71,7 @@ public class Removemessage extends Command {
 						List<PacketContainer> playerPackets = new ArrayList();
 						boolean resend = false;
 						for (int fill = 0; fill < 100 - messages.size(); fill++) {
-							playerPackets.add(Removemessage.this.emptyLinePacketContainer);
+//							playerPackets.add(Removemessage.this.emptyLinePacketContainer);
 						}
 						for (ChatMessage message : messages) {
 							if (message.getHash() == hash) {
@@ -80,7 +80,7 @@ public class Removemessage extends Command {
 										: Removemessage.this.getMessageDeletedChatComponentPlayer();
 								message.setComponent(removedComponent);
 								message.setHash(-1);
-								playerPackets.add(Format.createPacketPlayOutChat(removedComponent));
+//								playerPackets.add(Format.createPacketPlayOutChat(removedComponent));
 								resend = true;
 								continue;
 							}
@@ -93,12 +93,12 @@ public class Removemessage extends Command {
 											: Removemessage.this.getMessageDeletedChatComponentPlayer();
 									message.setComponent(removedComponent);
 									message.setHash(-1);
-									playerPackets.add(Format.createPacketPlayOutChat(removedComponent));
+//									playerPackets.add(Format.createPacketPlayOutChat(removedComponent));
 									resend = true;
 									continue;
 								}
 							}
-							playerPackets.add(Format.createPacketPlayOutChat(message.getComponent()));
+//							playerPackets.add(Format.createPacketPlayOutChat(message.getComponent()));
 
 						}
 						if (resend) {
@@ -110,7 +110,7 @@ public class Removemessage extends Command {
 							for (Player p : packets.keySet()) {
 								List<PacketContainer> pPackets = packets.get(p);
 								for (PacketContainer c : pPackets) {
-									Format.sendPacketPlayOutChat(p, c);
+//									Format.sendPacketPlayOutChat(p, c);
 								}
 							}
 						}

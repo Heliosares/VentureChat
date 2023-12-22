@@ -21,7 +21,7 @@ import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 import mineverse.Aust1n46.chat.utilities.Format;
 
 public class Edit extends Command {
-	private PacketContainer emptyLinePacketContainer = Format.createPacketPlayOutChat("{\"extra\":[\" \"],\"text\":\"\"}");
+//	private PacketContainer emptyLinePacketContainer = Format.createPacketPlayOutChat("{\"extra\":[\" \"],\"text\":\"\"}");
 	private MineverseChat plugin = MineverseChat.getInstance();
 	private WrappedChatComponent messageDeletedComponentPlayer;
 
@@ -51,7 +51,7 @@ public class Edit extends Command {
 					List<PacketContainer> playerPackets = new ArrayList();
 					boolean resend = false;
 					for (int fill = 0; fill < 100 - messages.size(); fill++) {
-						playerPackets.add(Edit.this.emptyLinePacketContainer);
+//						playerPackets.add(Edit.this.emptyLinePacketContainer);
 					}
 					for (ChatMessage message : messages) {
 						if (message.getHash() == hash) {
@@ -60,7 +60,7 @@ public class Edit extends Command {
 									: Edit.this.getMessageDeletedChatComponentPlayer();
 							message.setComponent(removedComponent);
 							message.setHash(-1);
-							playerPackets.add(Format.createPacketPlayOutChat(removedComponent));
+//							playerPackets.add(Format.createPacketPlayOutChat(removedComponent));
 							resend = true;
 							continue;
 						}
@@ -73,12 +73,12 @@ public class Edit extends Command {
 										: Edit.this.getMessageDeletedChatComponentPlayer();
 								message.setComponent(removedComponent);
 								message.setHash(-1);
-								playerPackets.add(Format.createPacketPlayOutChat(removedComponent));
+//								playerPackets.add(Format.createPacketPlayOutChat(removedComponent));
 								resend = true;
 								continue;
 							}
 						}
-						playerPackets.add(Format.createPacketPlayOutChat(message.getComponent()));
+//						playerPackets.add(Format.createPacketPlayOutChat(message.getComponent()));
 					}
 					if (resend) {
 						packets.put(p.getPlayer(), playerPackets);
@@ -89,7 +89,7 @@ public class Edit extends Command {
 						for (Player p : packets.keySet()) {
 							List<PacketContainer> pPackets = packets.get(p);
 							for (PacketContainer c : pPackets) {
-								Format.sendPacketPlayOutChat(p, c);
+//								Format.sendPacketPlayOutChat(p, c);
 							}
 						}
 					}

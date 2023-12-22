@@ -10,6 +10,8 @@ import java.util.*;
 
 import mineverse.Aust1n46.chat.api.events.PrivateMessageEvent;
 import net.kyori.adventure.text.Component;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -439,16 +441,11 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 						}
 						
 						String json = Format.formatModerationGUI(globalJSON, p.getPlayer(), senderName, chatchannel, hash);
-						PacketContainer packet = Format.createPacketPlayOutChat(json);
 						
-						if(getConfig().getBoolean("ignorechat", false)) {
-							if(!p.getIgnores().contains(senderUUID)) {
-								// System.out.println("Chat sent");
-								Format.sendPacketPlayOutChat(p.getPlayer(), packet);							
-							}
-							continue;
-						}
-						Format.sendPacketPlayOutChat(p.getPlayer(), packet);	
+						if(!getConfig().getBoolean("ignorechat", false) && p.getIgnores().contains(senderUUID)) continue;
+
+						BaseComponent[] base = ComponentSerializer.parse(json);
+						p.getPlayer().sendMessage(base);
 					}
 				}
 			}
@@ -469,8 +466,8 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 				for(MineverseChatPlayer p : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
 					if(p.isListening(chatChannelObj.getName())) {
 						String finalJSON = Format.formatModerationGUI(json, p.getPlayer(), "Discord", chatChannelObj.getName(), hash);
-						PacketContainer packet = Format.createPacketPlayOutChat(finalJSON);
-						Format.sendPacketPlayOutChat(p.getPlayer(), packet);
+//						PacketContainer packet = Format.createPacketPlayOutChat(finalJSON);
+//						Format.sendPacketPlayOutChat(p.getPlayer(), packet);
 					}
 				}	
 			}

@@ -6,6 +6,8 @@ import java.util.Set;
 
 import mineverse.Aust1n46.chat.api.events.PrivateMessageEvent;
 import net.essentialsx.api.v2.services.discord.DiscordService;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -55,7 +57,7 @@ public class ChatListener implements Listener {
 			}
 		});
 	}
-	
+
 	public void handleTrueAsyncPlayerChatEvent(AsyncPlayerChatEvent event) {
 		boolean bungee = false;
 		String chat = event.getMessage();
@@ -64,17 +66,17 @@ public class ChatListener implements Listener {
 		int recipientCount = recipients.size(); // Don't count vanished players
 		MineverseChatPlayer mcp = MineverseChatAPI.getOnlineMineverseChatPlayer(event.getPlayer());
 		ChatChannel eventChannel = mcp.getCurrentChannel();
-		
+
 		if(mcp.isEditing()) {
 			mcp.getPlayer().sendMessage(Format.FormatStringAll(chat));
 			mcp.setEditing(false);
 			return;
 		}
-		
+
 		if(mcp.isQuickChat()) {
 			eventChannel = mcp.getQuickChannel();
 		}
-		
+
 		if(mcp.hasConversation() && !mcp.isQuickChat()) {
 			MineverseChatPlayer tp = MineverseChatAPI.getMineverseChatPlayer(mcp.getConversation());
 			if(!tp.isOnline()) {
@@ -131,15 +133,15 @@ public class ChatListener implements Listener {
 					return;
 				}
 				filtered = privateMessageEvent.getChat();
-				
+
 				send = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcp.getPlayer(), plugin.getConfig().getString("tellformatfrom").replaceAll("sender_", "")));
 				echo = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcp.getPlayer(), plugin.getConfig().getString("tellformatto").replaceAll("sender_", "")));
 				spy = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcp.getPlayer(), plugin.getConfig().getString("tellformatspy").replaceAll("sender_", "")));
-				
+
 				send = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(tp.getPlayer(), send.replaceAll("receiver_", ""))) + filtered;
 				echo = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(tp.getPlayer(), echo.replaceAll("receiver_", ""))) + filtered;
 				spy = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(tp.getPlayer(), spy.replaceAll("receiver_", ""))) + filtered;
-				
+
 				if(!mcp.getPlayer().hasPermission("venturechat.spy.override")) {
 					for(MineverseChatPlayer p : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
 						if(p.getName().equals(mcp.getName()) || p.getName().equals(tp.getName())) {
@@ -201,7 +203,7 @@ public class ChatListener implements Listener {
 			mcp.getPlayer().sendMessage(ChatColor.RED + "You are not in a party.");
 			return;
 		}
-		
+
 		Location locreceip;
 		Location locsender = mcp.getPlayer().getLocation();
 		Location diff;
@@ -267,9 +269,9 @@ public class ChatListener implements Listener {
 		}
 		curColor = eventChannel.getChatColor();
 		bungee = eventChannel.getBungee();
-		
+
 		long dateTimeSeconds = System.currentTimeMillis() / Format.MILLISECONDS_PER_SECOND;
-		
+
 		int chCooldown = 0;
 		if(eventChannel.hasCooldown()) {
 			chCooldown = eventChannel.getCooldown();
@@ -295,7 +297,7 @@ public class ChatListener implements Listener {
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
-		
+
 		if (mcp.hasSpam(eventChannel) && plugin.getConfig().getConfigurationSection("antispam").getBoolean("enabled")
 				&& !mcp.getPlayer().hasPermission("venturechat.spam.bypass")) {
 			long spamcount = mcp.getSpam().get(eventChannel).get(0);
@@ -349,13 +351,13 @@ public class ChatListener implements Listener {
 			mcp.getSpam().get(eventChannel).add(0, 1L);
 			mcp.getSpam().get(eventChannel).add(1, dateTimeSeconds);
 		}
-		
+
 		if(eventChannel.hasDistance()) {
 			chDistance = eventChannel.getDistance();
 		}
-		
+
 		format = Format.FormatStringAll(eventChannel.getFormat());
-		
+
 		filterthis = eventChannel.isFiltered();
 		if(filterthis) {
 			if(mcp.hasFilter()) {
@@ -472,7 +474,7 @@ public class ChatListener implements Listener {
 				}
 			}
 		}
-		
+
 		if(mcp.getPlayer().hasPermission("venturechat.color.legacy")) {
 			chat = Format.FormatStringLegacyColor(chat);
 		}
@@ -492,12 +494,12 @@ public class ChatListener implements Listener {
 		else {
 			chat = curColor + chat;
 		}
-		
-		String globalJSON = Format.convertToJson(mcp, format, chat); 
+
+		String globalJSON = Format.convertToJson(mcp, format, chat);
 		format = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcp.getPlayer(), Format.FormatStringAll(format)));
 		String message = Format.stripColor(format + chat); // UTF-8 encoding issues.
 		int hash = message.hashCode();
-		
+
 		//Create VentureChatEvent
 		VentureChatEvent ventureChatEvent = new VentureChatEvent(mcp, mcp.getName(), mcp.getNickname(), MineverseChat.getVaultPermission().getPrimaryGroup(mcp.getPlayer()), eventChannel, recipients, recipientCount, format, chat, globalJSON, hash, bungee);
 		//Fire event and wait for other plugin listeners to act on it
@@ -507,7 +509,7 @@ public class ChatListener implements Listener {
 		// Reset quick chat flag
 		mcp.setQuickChat(false);
 	}
-	
+
 	public void handleVentureChatEvent(VentureChatEvent event) {
 		MineverseChatPlayer mcp = event.getMineverseChatPlayer();
 		ChatChannel channel = event.getChannel();
@@ -523,21 +525,21 @@ public class ChatListener implements Listener {
 		if (essentialsDiscordHook && channel.isDefaultchannel()) {
 			Bukkit.getServicesManager().load(DiscordService.class).sendChatMessage(mcp.getPlayer(), chat);
 		}
-		
+
 		if(!bungee) {
 			if(Database.isEnabled()) {
 				Database.writeVentureChat(mcp.getUUID().toString(), mcp.getName(), "Local", channel.getName(), chat.replace("'", "''"), "Chat");
 			}
-			
+
 			if(recipientCount == 1) {
 				if(!plugin.getConfig().getString("emptychannelalert", "&6No one is listening to you.").equals("")) {
-					mcp.getPlayer().sendMessage(Format.FormatStringAll(plugin.getConfig().getString("emptychannelalert", "&6No one is listening to you.")));	
+					mcp.getPlayer().sendMessage(Format.FormatStringAll(plugin.getConfig().getString("emptychannelalert", "&6No one is listening to you.")));
 				}
 			}
 			for(Player p : recipients) {
 				String json = Format.formatModerationGUI(globalJSON, p, mcp.getName(), channel.getName(), hash);
-				PacketContainer packet = Format.createPacketPlayOutChat(json);
-				Format.sendPacketPlayOutChat(p, packet);
+				BaseComponent[] base = ComponentSerializer.parse(json);
+				p.getPlayer().sendMessage(base);
 			}
 			Bukkit.getConsoleSender().sendMessage(consoleChat);
 			return;
