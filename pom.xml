@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>mineverse.Aust1n46.chat</groupId>
     <artifactId>VentureChat</artifactId>
-    <version>3.6.2</version>
+    <version>3.6.3</version>
     <url>https://bitbucket.org/Aust1n46/venturechat/src/master</url>
     <scm>
         <url>https://bitbucket.org/Aust1n46/venturechat/src/master</url>
@@ -152,7 +152,7 @@
     	<dependency>
     		<groupId>io.papermc.paper</groupId>
     		<artifactId>paper-api</artifactId>
-    		<version>1.20.2-R0.1-SNAPSHOT</version>
+    		<version>1.20.4-R0.1-SNAPSHOT</version>
     		<scope>provided</scope>
 		</dependency>
         <dependency>
