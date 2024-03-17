@@ -10,6 +10,7 @@ import java.util.*;
 
 import mineverse.Aust1n46.chat.api.events.PrivateMessageEvent;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.Bukkit;
@@ -444,8 +445,8 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 						
 						if(!getConfig().getBoolean("ignorechat", false) && p.getIgnores().contains(senderUUID)) continue;
 
-						BaseComponent[] base = ComponentSerializer.parse(json);
-						p.getPlayer().sendMessage(base);
+						getLogger().info("[Debug] Received JSON: " + json);
+						p.getPlayer().sendMessage(GsonComponentSerializer.gson().deserialize(json));
 					}
 				}
 			}
