@@ -445,7 +445,6 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 						
 						if(!getConfig().getBoolean("ignorechat", false) && p.getIgnores().contains(senderUUID)) continue;
 
-						getLogger().info("[Debug] Received JSON: " + json);
 						p.getPlayer().sendMessage(GsonComponentSerializer.gson().deserialize(json));
 					}
 				}
