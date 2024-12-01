@@ -17,7 +17,7 @@
     <name>VentureChat</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <testserver>{user.home}/TestServer/</testserver>
+        <testserver>${user.home}/TestServer/</testserver>
     </properties>
     <build>
         <defaultGoal>clean package</defaultGoal>
@@ -233,14 +233,14 @@
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
-            <version>1.13-SNAPSHOT</version>
+            <version>1.16-R0.1</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
-            <version>1.13-SNAPSHOT</version>
+            <version>1.16-R0.1</version>
             <type>javadoc</type>
             <scope>provided</scope>
         </dependency>
