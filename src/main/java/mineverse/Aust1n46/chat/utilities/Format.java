@@ -186,8 +186,8 @@ public class Format {
 				if (ChatColor.stripColor(link).contains("https://"))
 					https = "s";
 				temp += convertToJsonColors(lastCode + link,
-						",\"underlined\":\"" + underlineURLs()
-								+ "\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http" + https + "://"
+						",\"underlined\":" + underlineURLs()
+								+ ",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http" + https + "://"
 								+ ChatColor.stripColor(link.replace("http://", "").replace("https://", ""))
 								+ "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":["
 								+ convertToJsonColors(lastCode + link) + "]}}")
@@ -594,7 +594,7 @@ public class Format {
 
 		allFormated = allFormated.replaceAll("%", "\\%");
 
-		if(hex)	allFormated = convertHexColorCodeStringToBukkitColorCodeString(allFormated);
+		if (hex)	allFormated = convertHexColorCodeStringToBukkitColorCodeString(allFormated);
 		return allFormated;
 	}
 
@@ -628,7 +628,7 @@ public class Format {
      */
 	public static String FormatString(String string, boolean magic) {
 		String allFormated = string;
-		if(magic) allFormated = allFormated.replaceAll("&[kK]", BUKKIT_COLOR_CODE_PREFIX + "k");
+		if (magic) allFormated = allFormated.replaceAll("&[kK]", BUKKIT_COLOR_CODE_PREFIX + "k");
 		allFormated = allFormated.replaceAll("&[lL]", BUKKIT_COLOR_CODE_PREFIX + "l");
 		allFormated = allFormated.replaceAll("&[mM]", BUKKIT_COLOR_CODE_PREFIX + "m");
 		allFormated = allFormated.replaceAll("&[nN]", BUKKIT_COLOR_CODE_PREFIX + "n");
